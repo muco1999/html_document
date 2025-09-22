@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лендинг</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f7f7f7, #e0f7fa);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, select, button {
+      margin-bottom: 15px;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    button {
+      background: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .success {
+      color: green;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 450px) {
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Оставьте свои контакты</h1>
+
+  <form id="contactForm">
+    <input type="text" name="name" placeholder="Ваше имя" required>
+    <input type="email" name="email" placeholder="Ваш email" required>
+    <input type="tel" name="phone" placeholder="Телефон">
+    
+    <select name="reason" required>
+      <option value="" disabled selected>Выберите цель</option>
+      <option value="Хочу купить срочно">Хочу купить срочно</option>
+      <option value="Просто интересно">Просто интересно</option>
+      <option value="Хочу сотрудничество">Хочу сотрудничество</option>
+      <option value="Изучаю цены">Изучаю цены</option>
+    </select>
+
+    <button type="submit">Отправить</button>
+    <div class="success" id="successMessage"></div>
+  </form>
+</div>
+
+<script>
+const botToken = "7869917177:AAFugiEYqSDo55XUYa7h7FSLaBkNVnoUA_w";
+const chatId = "6266166994";
+
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.name.value;
+  const email = form.email.value;
+  const phone = form.phone.value;
+  const reason = form.reason.value;
+
+  const message = `Новая заявка:\nИмя: ${name}\nEmail: ${email}\nТелефон: ${phone}\nЦель: ${reason}`;
+  const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+  try {
+    const res = await fetch(url);
+    if(res.ok) {
+      document.getElementById('successMessage').textContent = "Спасибо! Ваши контакты отправлены.";
+      form.reset();
+    } else {
+      document.getElementById('successMessage').textContent = "Ошибка отправки, попробуйте ещё раз.";
+    }
+  } catch {
+    document.getElementById('successMessage').textContent = "Ошибка отправки, попробуйте ещё раз.";
+  }
+});
+</script>
+
+</body>
+</html>
