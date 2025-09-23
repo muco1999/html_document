@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лендинг</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+      max-width: 450px;
+      width: 100%;
+      transition: 0.3s;
+    }
+
+    .container:hover {
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      text-align: center;
+      color: #222;
+      margin-bottom: 20px;
+      font-size: 2em;
+      font-weight: 700;
+    }
+
+    p.trust {
+      text-align: center;
+      color: #555;
+      font-weight: 500;
+      margin-bottom: 25px;
+      line-height: 1.4;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, select, button {
+      margin-bottom: 15px;
+      padding: 14px 16px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    button {
+      background: linear-gradient(135deg, #4CAF50, #43a047);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #45a049, #388e3c);
+    }
+
+    .success {
+      color: #388e3c;
+      text-align: center;
+      margin-top: 12px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .why-us {
+      margin-top: 30px;
+    }
+
+    .why-us h2 {
+      font-size: 1.3em;
+      text-align: center;
+      margin-bottom: 18px;
+      color: #222;
+      font-weight: 600;
+    }
+
+    .why-us ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .why-us li {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      font-size: 1em;
+      color: #444;
+    }
+
+    .why-us li svg {
+      width: 22px;
+      height: 22px;
+      margin-right: 10px;
+      flex-shrink: 0;
+      fill: #4CAF50;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px;
+      }
+      h1 {
+        font-size: 1.6em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Оставьте свои контакты</h1>
+
+  <p class="trust">
+    Ваш успех — это наш успех. Мы ценим доверие и всегда работаем честно и прозрачно.
+  </p>
+
+  <form id="contactForm">
+    <input type="text" name="name" placeholder="Ваше имя" required>
+    <input type="email" name="email" placeholder="Ваш email" required>
+    <input type="tel" name="phone" placeholder="Телефон">
+    
+    <select name="reason" required>
+      <option value="" disabled selected>Выберите цель</option>
+      <option value="Хочу купить срочно">Хочу купить срочно</option>
+      <option value="Просто интересно">Просто интересно</option>
+      <option value="Хочу сотрудничество">Хочу сотрудничество</option>
+      <option value="Изучаю цены">Изучаю цены</option>
+    </select>
+
+    <button type="submit">Отправить</button>
+    <div class="success" id="successMessage"></div>
+  </form>
+
+  <div class="why-us">
+    <h2>Почему выбирают нас?</h2>
+    <ul>
+      <li>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.285 6.709l-11.285 11.291-5.285-5.291 1.414-1.414 3.871 3.877 9.871-9.877z"/></svg>
+        Прозрачные условия работы
+      </li>
+      <li>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.285 6.709l-11.285 11.291-5.285-5.291 1.414-1.414 3.871 3.877 9.871-9.877z"/></svg>
+        Фокус на вашем результате
+      </li>
+      <li>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.285 6.709l-11.285 11.291-5.285-5.291 1.414-1.414 3.871 3.877 9.871-9.877z"/></svg>
+        Поддержка и сопровождение
+      </li>
+      <li>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.285 6.709l-11.285 11.291-5.285-5.291 1.414-1.414 3.871 3.877 9.871-9.877z"/></svg>
+        Современные инструменты и опыт
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+const botToken = "7869917177:AAFugiEYqSDo55XUYa7h7FSLaBkNVnoUA_w";
+// массив всех получателей
+const chatIds = ["6266166994", "7960346117"];
+
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.name.value;
+  const email = form.email.value;
+  const phone = form.phone.value;
+  const reason = form.reason.value;
+
+  const message = `Новая заявка:\nИмя: ${name}\nEmail: ${email}\nТелефон: ${phone}\nЦель: ${reason}`;
+
+  try {
+    // Отправляем каждому chatId
+    for (let id of chatIds) {
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${id}&text=${encodeURIComponent(message)}`);
+    }
+
+    document.getElementById('successMessage').textContent = "Спасибо! Ваши контакты отправлены.";
+    form.reset();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('successMessage').textContent = "Ошибка отправки, попробуйте ещё раз.";
+  }
+});
+</script>
+
+</body>
+</html>
