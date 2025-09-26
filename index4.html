@@ -44,19 +44,20 @@
     box-shadow: 0 8px 20px rgba(0,0,0,0.4);
   }
 
+  /* 🍂 Листики */
   .leaf {
     position: absolute;
-    width: 40px;
-    height: 40px;
-    background-size: cover;
     top: -50px;
     pointer-events: none;
+    animation: fall linear forwards;
   }
 
   @keyframes fall {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    50% { transform: translateY(50vh) rotate(180deg); opacity: 0.8; }
-    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; }
+    25% { transform: translateY(25vh) rotate(10deg) translateX(-15px); opacity: 0.95; }
+    50% { transform: translateY(50vh) rotate(-10deg) translateX(15px); opacity: 0.9; }
+    75% { transform: translateY(75vh) rotate(8deg) translateX(-10px); opacity: 0.85; }
+    100% { transform: translateY(100vh) rotate(0deg) translateX(0); opacity: 0.8; }
   }
 
   /* 💥 Взрыв */
@@ -124,32 +125,26 @@
 <button onclick="boom()">Нажимай получить подарок</button>
 
 <script>
-const leafImages = [
-  'list1.png', // красный лист
-  'list4.png'  // коричневый лист
-];
-
-const treasures = ["💰","💵","💎","🪙","🏆","👑"]; // деньги и золото
-
+const leaves = ["🍂","🍁","🍃"];
+const treasures = ["💰","💵","💎","🪙","🏆","👑"];
 const bodyEl = document.body;
 
+// 🍂 Плавающие листья
 function createLeaf() {
   const leaf = document.createElement('div');
   leaf.className = 'leaf';
+  leaf.textContent = leaves[Math.floor(Math.random()*leaves.length)];
   leaf.style.left = Math.random() * window.innerWidth + 'px';
-  leaf.style.width = 30 + Math.random() * 30 + 'px';
-  leaf.style.height = leaf.style.width;
-  leaf.style.backgroundImage = `url('${leafImages[Math.floor(Math.random()*leafImages.length)]}')`;
-  const duration = 5 + Math.random() * 5;
-  leaf.style.animation = `fall ${duration}s ease-in forwards`;
+  leaf.style.fontSize = (20 + Math.random() * 25) + "px";
+  leaf.style.animationDuration = (5 + Math.random() * 5) + "s";
+  leaf.style.animationDelay = Math.random() + "s";
   bodyEl.appendChild(leaf);
 
-  setTimeout(() => leaf.remove(), duration * 1000);
+  setTimeout(() => leaf.remove(), parseFloat(leaf.style.animationDuration) * 1000);
 }
-
 setInterval(createLeaf, 400);
 
-// 💥 Взрыв + 💰 сокровища
+// 💥 Взрыв + 💰 Сокровища
 function boom() {
   // Взрыв
   const explosion = document.createElement("div");
@@ -159,12 +154,10 @@ function boom() {
 
   // Сокровища (15 штук)
   for (let i = 0; i < 15; i++) {
-    setTimeout(() => {
-      createTreasure();
-    }, i * 150);
+    setTimeout(createTreasure, i * 150);
   }
 
-  // Через 1.5 сек убрать взрыв и показать новый текст
+  // Через 1.5 сек убрать взрыв и показать текст
   setTimeout(() => {
     explosion.remove();
     const title = document.getElementById("main-title");
@@ -173,17 +166,17 @@ function boom() {
   }, 1500);
 }
 
+// 💰 Создание сокровищ
 function createTreasure() {
   const treasure = document.createElement("div");
   treasure.className = "treasure";
   treasure.textContent = treasures[Math.floor(Math.random() * treasures.length)];
   treasure.style.left = Math.random() * window.innerWidth + "px";
   treasure.style.fontSize = 25 + Math.random() * 45 + "px";
-  const duration = 4 + Math.random() * 3;
-  treasure.style.animationDuration = duration + "s";
+  treasure.style.animationDuration = (4 + Math.random() * 3) + "s";
   bodyEl.appendChild(treasure);
 
-  setTimeout(() => treasure.remove(), duration * 1000);
+  setTimeout(() => treasure.remove(), parseFloat(treasure.style.animationDuration) * 1000);
 }
 </script>
 </body>
