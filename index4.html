@@ -3,78 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Интерактивное 3D сердце</title>
+<title>Осень приходит 🍂</title>
 <style>
   body {
     margin: 0;
     height: 100vh;
+    background: linear-gradient(to bottom, #ffecd2, #fcb69f);
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle at center, #ffd1dc, #ff9a9e);
-    perspective: 1000px; /* для 3D эффекта */
-    cursor: grab;
+    color: #8B4513;
+    flex-direction: column;
+    position: relative;
   }
 
-  .heart-container {
-    transform-style: preserve-3d;
+  h1 {
+    font-size: 3em;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+    transition: all 0.5s ease-in-out;
   }
 
-  .heart {
-    font-size: 120px;
-    color: red;
-    text-shadow: 0 0 20px rgba(255,0,0,0.7);
-    animation: beat 1s infinite;
-    user-select: none;
+  button {
+    padding: 15px 35px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ff8c42, #ff5c33);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.3s;
+    z-index: 10;
   }
 
-  @keyframes beat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.3); }
+  button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  }
+
+  .leaf {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+    top: -50px;
+    pointer-events: none;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    50% { transform: translateY(50vh) rotate(180deg); opacity: 0.8; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* 💥 Взрыв */
+  .explosion {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,0,0.9), rgba(255,0,0,0.7));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 9vw;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 30px black, 0 0 60px red;
+    animation: boomAnim 1.2s ease-in-out forwards, shake 0.4s ease-in-out;
+    z-index: 9999;
+  }
+
+  @keyframes boomAnim {
+    0% { transform: scale(0.2); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+
+  @keyframes shake {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-10px, 5px); }
+    50% { transform: translate(10px, -5px); }
+    75% { transform: translate(-5px, 10px); }
+    100% { transform: translate(0, 0); }
+  }
+
+  /* ✨ Новый текст */
+  .highlight-text {
+    font-size: 4em;
+    color: darkred;
+    text-shadow: 0 0 15px rgba(255,0,0,0.8), 0 0 25px rgba(255,200,200,0.8);
+    animation: appear 1.5s ease-out forwards;
+  }
+
+  @keyframes appear {
+    0% { opacity: 0; transform: scale(0.3); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* 💰 Сокровища */
+  .treasure {
+    position: absolute;
+    top: -50px;
+    pointer-events: none;
+    animation: treasureFall linear forwards;
+  }
+
+  @keyframes treasureFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
   }
 </style>
 </head>
 <body>
-  <div class="heart-container">
-    <div class="heart">❤️</div>
-  </div>
+<h1 id="main-title">Осень приходит 🍂</h1>
+<button onclick="boom()">Нажимай получить подарок</button>
 
 <script>
-  const container = document.querySelector('.heart-container');
-  const heart = document.querySelector('.heart');
+const leafImages = [
+  'list1.png', // красный лист
+  'list4.png'  // коричневый лист
+];
 
-  let isDragging = false;
-  let previousX = 0;
-  let previousY = 0;
-  let rotateX = 0;
-  let rotateY = 0;
+const treasures = ["💰","💵","💎","🪙","🏆","👑"]; // деньги и золото
 
-  container.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    previousX = e.clientX;
-    previousY = e.clientY;
-    document.body.style.cursor = 'grabbing';
-  });
+const bodyEl = document.body;
 
-  window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
+function createLeaf() {
+  const leaf = document.createElement('div');
+  leaf.className = 'leaf';
+  leaf.style.left = Math.random() * window.innerWidth + 'px';
+  leaf.style.width = 30 + Math.random() * 30 + 'px';
+  leaf.style.height = leaf.style.width;
+  leaf.style.backgroundImage = `url('${leafImages[Math.floor(Math.random()*leafImages.length)]}')`;
+  const duration = 5 + Math.random() * 5;
+  leaf.style.animation = `fall ${duration}s ease-in forwards`;
+  bodyEl.appendChild(leaf);
 
-    const deltaX = e.clientX - previousX;
-    const deltaY = e.clientY - previousY;
+  setTimeout(() => leaf.remove(), duration * 1000);
+}
 
-    rotateY += deltaX * 0.5;
-    rotateX -= deltaY * 0.5;
+setInterval(createLeaf, 400);
 
-    heart.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.3)`; // сохраняем пульс
+// 💥 Взрыв + 💰 сокровища
+function boom() {
+  // Взрыв
+  const explosion = document.createElement("div");
+  explosion.className = "explosion";
+  explosion.textContent = "💥 БОМ!";
+  document.body.appendChild(explosion);
 
-    previousX = e.clientX;
-    previousY = e.clientY;
-  });
+  // Сокровища (15 штук)
+  for (let i = 0; i < 15; i++) {
+    setTimeout(() => {
+      createTreasure();
+    }, i * 150);
+  }
 
-  window.addEventListener('mouseup', () => {
-    isDragging = false;
-    document.body.style.cursor = 'grab';
-  });
+  // Через 1.5 сек убрать взрыв и показать новый текст
+  setTimeout(() => {
+    explosion.remove();
+    const title = document.getElementById("main-title");
+    title.textContent = "Акшоола ещё работаеть";
+    title.classList.add("highlight-text");
+  }, 1500);
+}
+
+function createTreasure() {
+  const treasure = document.createElement("div");
+  treasure.className = "treasure";
+  treasure.textContent = treasures[Math.floor(Math.random() * treasures.length)];
+  treasure.style.left = Math.random() * window.innerWidth + "px";
+  treasure.style.fontSize = 25 + Math.random() * 45 + "px";
+  const duration = 4 + Math.random() * 3;
+  treasure.style.animationDuration = duration + "s";
+  bodyEl.appendChild(treasure);
+
+  setTimeout(() => treasure.remove(), duration * 1000);
+}
 </script>
 </body>
 </html>
