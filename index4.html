@@ -1,183 +1,147 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Осень приходит 🍂</title>
-<style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(to bottom, #ffecd2, #fcb69f);
-    overflow: hidden;
-    font-family: 'Segoe UI', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #8B4513;
-    flex-direction: column;
-    position: relative;
-  }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ночное небо — красная луна и звёзды</title>
+  <style>
+    :root{
+      --sky1:#05060f; --sky2:#0b0f2a; --sky3:#02030b;
+      --accent:#ff2b5c; --btn1:#1e2030; --btn2:#2a2e4a;
+      --btnGlow:#ff6b9a; --text:#f6f7ff; --compliment:#ff4c75;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; overflow:hidden; color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      background:
+        radial-gradient(120vmax 80vmax at 65% -10%, rgba(255,60,100,.12), transparent 60%),
+        linear-gradient(180deg, var(--sky1), var(--sky2) 55%, var(--sky3));
+      position:relative; user-select:none;
+    }
 
-  h1 {
-    font-size: 3em;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    margin-bottom: 20px;
-    transition: all 0.5s ease-in-out;
-  }
+    .stars{position:absolute; inset:0; pointer-events:none;}
+    .star{position:absolute; font-size: clamp(10px, 1.2vw, 18px); opacity:.8; filter: drop-shadow(0 0 6px rgba(255,255,255,.35));}
+    .twinkle{animation: twinkle 2.4s ease-in-out infinite;}
+    @keyframes twinkle{0%,100%{opacity:.25; transform:scale(.9)}50%{opacity:1; transform:scale(1.08)}}
 
-  button {
-    padding: 15px 35px;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #ff8c42, #ff5c33);
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: transform 0.2s ease, box-shadow 0.3s;
-    z-index: 10;
-  }
+    .moon{position:absolute; right:10vw; top:10vh; font-size: clamp(56px, 10vw, 160px);
+      line-height:1; text-shadow: 0 0 30px var(--accent), 0 0 60px rgba(255,40,80,.35); filter: saturate(1.2);}
+    .moon::after{content:""; position:absolute; inset:-12% -15%; border-radius:50%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(255,60,100,.42), rgba(255,60,100,.08) 55%, transparent 70%);
+      z-index:-1; filter: blur(6px); animation: pulse 4.8s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{transform:scale(1); opacity:.9}50%{transform:scale(1.05); opacity:1}}
 
-  button:hover {
-    transform: scale(1.08);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-  }
+    .message{position:absolute; inset:0; display:grid; place-items:center; pointer-events:none;
+      opacity:0; transform: translateY(6px) scale(.98);
+      transition: opacity .9s ease, transform .9s ease;
+      text-align:center; padding:0 6vw;}
+    .message.show{opacity:1; transform: translateY(0) scale(1)}
+    .message h1{
+      margin:0; font-weight:800; letter-spacing:.03em; line-height:1.2;
+      font-size: clamp(28px, 6vw, 64px);
+      color: var(--compliment);
+      text-shadow:
+        0 0 12px rgba(255, 70, 120, 0.7),
+        0 0 26px rgba(255, 40, 80, 0.5),
+        0 0 50px rgba(255, 40, 80, 0.3);
+      animation: glowPulse 3.6s ease-in-out infinite alternate;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .message h1.showText { opacity: 1; }
+    @keyframes glowPulse {
+      0% { text-shadow: 0 0 10px rgba(255,60,100,0.6), 0 0 30px rgba(255,40,80,0.3); }
+      100% { text-shadow: 0 0 25px rgba(255,80,120,0.9), 0 0 60px rgba(255,50,90,0.6); }
+    }
 
-  /* 🍂 Листики */
-  .leaf {
-    position: absolute;
-    top: -50px;
-    pointer-events: none;
-    animation: fall linear forwards;
-  }
+    .ctaWrap{position:absolute; left:0; right:0; bottom:4vh; display:flex; justify-content:center;}
+    .cta{position:relative; padding:14px 26px; border:none; cursor:pointer; border-radius:999px;
+      font-size: clamp(16px, 2.4vw, 20px); font-weight:700; color:var(--text);
+      background: linear-gradient(135deg, var(--btn1), var(--btn2));
+      box-shadow: 0 0 0 2px rgba(255,255,255,.08) inset, 0 10px 30px rgba(0,0,0,.35);
+      transition: transform .2s ease, box-shadow .2s ease; overflow:hidden; isolation:isolate;}
+    .cta::before{content:""; position:absolute; inset:0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
+      transform: translateX(-120%); filter: blur(1px); mix-blend-mode: screen; animation: shimmer 3s linear infinite;}
+    @keyframes shimmer{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+    .cta:hover{transform: translateY(-2px);} .cta:active{transform: translateY(0)}
 
-  @keyframes fall {
-    0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; }
-    25% { transform: translateY(25vh) rotate(10deg) translateX(-15px); opacity: 0.95; }
-    50% { transform: translateY(50vh) rotate(-10deg) translateX(15px); opacity: 0.9; }
-    75% { transform: translateY(75vh) rotate(8deg) translateX(-10px); opacity: 0.85; }
-    100% { transform: translateY(100vh) rotate(0deg) translateX(0); opacity: 0.8; }
-  }
-
-  /* 💥 Взрыв */
-  .explosion {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(255,255,0,0.9), rgba(255,0,0,0.7));
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 9vw;
-    font-weight: bold;
-    color: white;
-    text-shadow: 0 0 30px black, 0 0 60px red;
-    animation: boomAnim 1.2s ease-in-out forwards, shake 0.4s ease-in-out;
-    z-index: 9999;
-  }
-
-  @keyframes boomAnim {
-    0% { transform: scale(0.2); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 1; }
-    100% { transform: scale(2.5); opacity: 0; }
-  }
-
-  @keyframes shake {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(-10px, 5px); }
-    50% { transform: translate(10px, -5px); }
-    75% { transform: translate(-5px, 10px); }
-    100% { transform: translate(0, 0); }
-  }
-
-  /* ✨ Новый текст */
-  .highlight-text {
-    font-size: 4em;
-    color: darkred;
-    text-shadow: 0 0 15px rgba(255,0,0,0.8), 0 0 25px rgba(255,200,200,0.8);
-    animation: appear 1.5s ease-out forwards;
-  }
-
-  @keyframes appear {
-    0% { opacity: 0; transform: scale(0.3); }
-    50% { opacity: 1; transform: scale(1.2); }
-    100% { opacity: 1; transform: scale(1); }
-  }
-
-  /* 💰 Сокровища */
-  .treasure {
-    position: absolute;
-    top: -50px;
-    pointer-events: none;
-    animation: treasureFall linear forwards;
-  }
-
-  @keyframes treasureFall {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-  }
-</style>
+    .burst-star{position:absolute; font-size:22px; will-change: transform, opacity; pointer-events:none;}
+    @keyframes shoot{0%{transform: translate(0,0) scale(1); opacity:1}80%{opacity:1}100%{transform: translate(var(--dx), var(--dy)) scale(.6) rotate(var(--rot)); opacity:0}}
+  </style>
 </head>
 <body>
-<h1 id="main-title">Осень приходит 🍂</h1>
-<button onclick="boom()">Нажимай получить подарок</button>
+  <div class="moon">🌙</div>
+  <div class="stars" id="stars"></div>
+  <div class="message" id="msg"><h1 id="compliment"></h1></div>
+  <div class="ctaWrap"><button class="cta" id="cta">нажимай меня</button></div>
 
-<script>
-const leaves = ["🍂","🍁","🍃"];
-const treasures = ["💰","💵","💎","🪙","🏆","👑"];
-const bodyEl = document.body;
+  <script>
+    const compliments = [
+      "🌙 Пусть ночь подарит тебе спокойствие и добрые сны, Акшооланул 💫",
+      "⭐ Акшооланул, ты — как тёплый свет среди звёзд этой ночи",
+      "💫 Пусть звёзды хранят твоё настроение до утра, Акшооланул",
+      "🌌 Мир стал чуть уютнее, потому что ты есть, Акшооланул",
+      "✨ Спокойной ночи тебе, Акшооланул — доброго человека с ярким светом внутри",
+      "🌙 Акшооланул, ты заслуживаешь самую красивую ночь и самые добрые сны",
+      "💤 Пусть ночь будет нежной, как твоя улыбка, Акшооланул",
+      "🌠 Акшооланул, ты — напоминание, что даже в темноте есть свет",
+      "⭐ Спасибо, Акшооланул, что делаешь этот мир чуть теплее",
+      "🌜 Пусть луна охраняет твой покой этой ночью, Акшооланул"
+    ];
 
-// 🍂 Плавающие листья
-function createLeaf() {
-  const leaf = document.createElement('div');
-  leaf.className = 'leaf';
-  leaf.textContent = leaves[Math.floor(Math.random()*leaves.length)];
-  leaf.style.left = Math.random() * window.innerWidth + 'px';
-  leaf.style.fontSize = (20 + Math.random() * 25) + "px";
-  leaf.style.animationDuration = (5 + Math.random() * 5) + "s";
-  leaf.style.animationDelay = Math.random() + "s";
-  bodyEl.appendChild(leaf);
+    const msg = document.getElementById('msg');
+    const text = document.getElementById('compliment');
+    const btn = document.getElementById('cta');
+    const starsLayer = document.getElementById('stars');
 
-  setTimeout(() => leaf.remove(), parseFloat(leaf.style.animationDuration) * 1000);
-}
-setInterval(createLeaf, 400);
+    function rnd(min,max){return Math.random()*(max-min)+min}
 
-// 💥 Взрыв + 💰 Сокровища
-function boom() {
-  // Взрыв
-  const explosion = document.createElement("div");
-  explosion.className = "explosion";
-  explosion.textContent = "💥 БОМ!";
-  document.body.appendChild(explosion);
+    const totalStars = Math.min(160, Math.floor(window.innerWidth / 6));
+    for(let i=0;i<totalStars;i++){
+      const s=document.createElement('span');
+      s.textContent=Math.random()<.7?'🌟':'✨';
+      s.className='star twinkle';
+      s.style.left=rnd(-2,98)+'vw'; s.style.top=rnd(2,88)+'vh';
+      s.style.opacity=rnd(.35,1).toFixed(2);
+      s.style.animationDelay=rnd(0,2.4).toFixed(2)+'s';
+      starsLayer.appendChild(s);
+    }
 
-  // Сокровища (15 штук)
-  for (let i = 0; i < 15; i++) {
-    setTimeout(createTreasure, i * 150);
-  }
+    function showCompliment(){
+      const randomCompliment = compliments[Math.floor(Math.random()*compliments.length)];
+      text.classList.remove('showText');
+      setTimeout(()=>{
+        text.textContent = randomCompliment;
+        msg.classList.add('show');
+        text.classList.add('showText');
+      }, 500);
+    }
 
-  // Через 1.5 сек убрать взрыв и показать текст
-  setTimeout(() => {
-    explosion.remove();
-    const title = document.getElementById("main-title");
-    title.textContent = "Акшоола ещё работаеть";
-    title.classList.add("highlight-text");
-  }, 1500);
-}
+    // Показ комплимента при загрузке
+    window.addEventListener('load', showCompliment);
 
-// 💰 Создание сокровищ
-function createTreasure() {
-  const treasure = document.createElement("div");
-  treasure.className = "treasure";
-  treasure.textContent = treasures[Math.floor(Math.random() * treasures.length)];
-  treasure.style.left = Math.random() * window.innerWidth + "px";
-  treasure.style.fontSize = 25 + Math.random() * 45 + "px";
-  treasure.style.animationDuration = (4 + Math.random() * 3) + "s";
-  bodyEl.appendChild(treasure);
-
-  setTimeout(() => treasure.remove(), parseFloat(treasure.style.animationDuration) * 1000);
-}
-</script>
+    btn.addEventListener('click', ()=>{
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width/2;
+      const cy = rect.top + rect.height/2;
+      for(let i=0;i<50;i++){
+        const star=document.createElement('span');
+        star.className='burst-star';
+        star.textContent=Math.random()<.8?'🌟':'✨';
+        const angle=rnd(-110,-70); const distance=rnd(120,420);
+        const rad=angle*Math.PI/180; const dx=Math.cos(rad)*distance; const dy=Math.sin(rad)*distance;
+        const rot=rnd(-140,140)+'deg';
+        star.style.left=cx+'px'; star.style.top=cy+'px';
+        star.style.setProperty('--dx',dx+'px'); star.style.setProperty('--dy',dy+'px'); star.style.setProperty('--rot',rot);
+        star.style.animation=`shoot ${rnd(900,1400)}ms cubic-bezier(.15,.7,.1,1) forwards`;
+        document.body.appendChild(star);
+        star.addEventListener('animationend',()=>star.remove());
+      }
+      showCompliment();
+    });
+  </script>
 </body>
 </html>
