@@ -1,0 +1,134 @@
+<!doctype html>
+
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ты луна этого ноча</title>
+<style>
+  :root{
+    --sky1:#05040a; /* верхнее небо */
+    --sky2:#0b0720; /* нижнее небо */
+    --accent:#ff2b2b; /* красное свечение */
+    --star:#ffd54a;  /* звёздный цвет-ореол */
+    --btn1:#7c3aed;  /* градиент кнопки */
+    --btn2:#ec4899;
+    --glass:rgba(255,255,255,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:#fff; overflow:hidden; font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(255,70,70,.08), transparent 60%),
+      radial-gradient(70% 50% at 80% 10%, rgba(255,0,0,.06), transparent 60%),
+      linear-gradient(180deg, var(--sky1), var(--sky2));
+  }/* Слой неба */ .scene{position:relative; width:100%; height:100%;}
+
+/* Красная луна / .moon{ position:absolute; top:8vh; left:50%; transform:translateX(-50%); font-size:9rem; line-height:1; filter:saturate(1.4); text-shadow: 0 0 18px rgba(255,0,0,.6), 0 0 36px rgba(255,0,0,.45), 0 0 60px rgba(255,0,0,.35); user-select:none; pointer-events:none; } .moon::after{ / лёгкий туман вокруг луны */ content:""; position:absolute; inset:-18vmin; border-radius:50%; background:radial-gradient(circle, rgba(255,40,40,.08), transparent 60%); filter:blur(8px); }
+
+/* Звёзды */ .stars{position:absolute; inset:0; overflow:hidden} .star{ position:absolute; font-size:1.2rem; line-height:1; user-select:none; text-shadow:0 0 6px var(--star), 0 0 14px rgba(255,213,74,.6); opacity:.8; transform:translate(-50%,-50%) scale(1); animation: twinkle 3.5s ease-in-out infinite; } @keyframes twinkle{ 0%,100%{opacity:.75; filter:blur(0)} 50%{opacity:1; filter:blur(.3px)} }
+
+/* Вспышка при клике */ .flash{position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none} .flash.active{animation: flash .6s ease} @keyframes flash{0%{opacity:0} 20%{opacity:.35} 100%{opacity:0}}
+
+/* Сообщение */ .message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.96);
+  font-size: clamp(1.6rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: .02em;
+  padding: 1rem 1.6rem;
+  border-radius: 1.2rem;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.03));
+  box-shadow: 0 8px 30px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.1);
+  opacity: 0;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255,100,100,.3), 0 0 24px rgba(255,60,60,.2);
+  transform-origin: center;
+  transition: opacity .6s ease, scale .6s ease;
+}
+
+.message.show {
+  opacity: 1;
+  scale: 1;
+}
+/* Кнопка снизу */ .cta{ position:absolute; left:50%; bottom:6vh; transform:translateX(-50%); display:inline-flex; align-items:center; gap:.6rem; padding:1rem 1.4rem; font-size:1.05rem; font-weight:700; cursor:pointer; border:none; border-radius:999px; color:#fff; background:linear-gradient(135deg, var(--btn1), var(--btn2)); box-shadow:0 10px 30px rgba(112,0,255,.35), inset 0 0 0 1px rgba(255,255,255,.12); transition:transform .25s ease, box-shadow .25s ease, filter .25s ease; outline:none; } .cta:hover{transform:translateX(-50%) translateY(-2px); box-shadow:0 18px 40px rgba(112,0,255,.5)} .cta:active{transform:translateX(-50%) translateY(0)} .cta .pulse{position:absolute; inset:-6px; border-radius:999px; pointer-events:none; background:radial-gradient(75% 75% at 50% 50%, rgba(255,255,255,.15), transparent 60%); animation: breathe 2.5s ease-in-out infinite; } @keyframes breathe{0%,100%{opacity:.6; filter:blur(10px)} 50%{opacity:1; filter:blur(16px)}} .cta .shine{position:absolute; inset:0; border-radius:999px; overflow:hidden} .cta .shine::before{ content:""; position:absolute; inset:-40%; transform:skewX(-25deg) translateX(-120%); background:linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); animation: shine 3.2s linear infinite; } @keyframes shine{to{transform:skewX(-25deg) translateX(120%)}}
+
+/* Салют звёзд после клика */ .star.spark{animation: sparkle .9s ease forwards} @keyframes sparkle{ 0%{transform:translate(var(--x), var(--y)) scale(1); opacity:1} 60%{transform:translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy))) scale(1.5); opacity:1} 100%{transform:translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy))) scale(.8); opacity:.2} }
+
+/* Подсказка свайпа/клика (необяз.) */ .hint{position:absolute; bottom:14vh; left:50%; transform:translateX(-50%); font-size:.9rem; opacity:.6}
+
+/* Безопасные зоны */ @media (max-width:480px){ .moon{font-size:6.4rem} .message{bottom:24vh} } </style>
+
+</head>
+<body>
+  <div class="scene" id="scene">
+    <div class="moon" aria-hidden="true">🌙</div>
+    <div class="stars" id="stars" aria-hidden="true"></div><div class="message" id="message">🌕 «Ты — луна каждой ночи»</div>
+<div class="hint">нажми кнопку внизу — будет магия ✨</div>
+
+<button id="cta" class="cta" aria-label="Нажимай меня">
+  <span class="pulse"></span>
+  <span class="shine"></span>
+  <span>нажимай меня</span>
+</button>
+
+<div class="flash" id="flash"></div>
+
+  </div><script>
+  // Создаём звёзды случайно по экрану
+  const starsWrap = document.getElementById('stars');
+  const N = 70; // количество звёзд
+  const rand = (min, max) => Math.random()*(max-min)+min;
+
+  for(let i=0;i<N;i++){
+    const s = document.createElement('span');
+    s.className = 'star';
+    s.textContent = '🌟';
+    const x = rand(4, 96), y = rand(8, 86); // проценты по экрану
+    s.style.left = x + 'vw';
+    s.style.top  = y + 'vh';
+    s.style.setProperty('--x', '-50%');
+    s.style.setProperty('--y', '-50%');
+    // вектор разлёта для салюта
+    s.style.setProperty('--dx', (rand(-2,2).toFixed(2)) + 'vw');
+    s.style.setProperty('--dy', (rand(-2,2).toFixed(2)) + 'vh');
+    // индивидуальная задержка мерцания
+    s.style.animationDelay = (Math.random()*3).toFixed(2)+'s';
+    starsWrap.appendChild(s);
+  }
+
+  const cta = document.getElementById('cta');
+  const message = document.getElementById('message');
+  const flash = document.getElementById('flash');
+
+  function burst(){
+    // Вспышка
+    flash.classList.remove('active');
+    // перезапуск анимации вспышки
+    // eslint-disable-next-line no-unused-expressions
+    void flash.offsetWidth;
+    flash.classList.add('active');
+
+    // Звёздный салют: краткая "искристость"
+    document.querySelectorAll('.star').forEach(el=>{
+      el.classList.remove('spark');
+      // перезапуск анимации spark
+      void el.offsetWidth;
+      // случайный новый вектор
+      el.style.setProperty('--dx', (rand(-3,3).toFixed(2)) + 'vw');
+      el.style.setProperty('--dy', (rand(-3,3).toFixed(2)) + 'vh');
+      el.classList.add('spark');
+    });
+
+    // Показать сообщение чуть позже для драматизма
+    message.classList.add('show');
+  }
+
+  cta.addEventListener('click', burst);
+</script></body>
+</html>
