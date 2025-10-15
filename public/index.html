@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Анкета кандидата 🍁</title>
+  <style>
+    :root {
+      --bg1: 255, 99, 132;
+      --bg2: 53, 162, 235;
+      --card: 255, 255, 255;
+      --accent: 99, 102, 241;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 24px;
+      color: rgb(var(--card));
+
+      /* 🍁 Фон */
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+        url("autumn.jpg") center/cover no-repeat fixed;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 480px;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeInUp 1.2s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    .brand .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(var(--bg1), .9), rgba(var(--bg2), .9));
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .brand h1 {
+      font-size: 24px;
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+    }
+
+    .card {
+      background: rgba(15, 15, 25, 0.65);
+      border: 1px solid rgba(255, 255, 255, .15);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 28px 24px;
+      box-shadow: 0 10px 50px rgba(0, 0, 0, .6);
+      animation: fadeIn 1.5s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #d8dbef;
+    }
+
+    .field input,
+
+    .field select {
+  width: 100%;
+  padding: 14px 12px;
+  border-radius: 12px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(25, 25, 35, 0.6); /* 🔥 стеклянный тёмный фон */
+  color: #f5f7ff; /* светлый читаемый текст */
+  font-size: 16px;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(6px);
+}
+
+/* 💡 стрелочка выпадающего списка */
+.field select::-ms-expand {
+  display: none;
+}
+.field select {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+/* 🌈 при фокусе — мягкое свечение */
+.field select:focus {
+  border-color: rgba(99, 102, 241, 0.9);
+  background: rgba(35, 35, 50, 0.7);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+
+/* 🎨 сами опции в выпадающем списке */
+.field select option {
+  background: #1a1b27; /* тёмный фон */
+  color: #e6e9ff;      /* мягкий светлый текст */
+  padding: 8px;
+  font-size: 15px;
+}
+
+/* 🌤️ эффект при наведении */
+.field select option:hover {
+  background: rgba(99, 102, 241, 0.25);
+}
+
+
+    .field input:focus,
+    .field select:focus {
+      border-color: rgba(var(--accent), 0.8);
+      background: rgba(255, 255, 255, .12);
+      box-shadow: 0 0 0 3px rgba(var(--accent), 0.2);
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    button.primary {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      color: #fff;
+      background: linear-gradient(135deg, rgba(var(--bg1), 1), rgba(var(--bg2), 1));
+      box-shadow: 0 8px 25px rgba(var(--bg2), .4);
+      transition: transform .1s ease, opacity .3s;
+      width: 100%;
+    }
+
+    button.primary:hover {
+      opacity: 0.9;
+    }
+
+    button.primary:active {
+      transform: translateY(1px);
+    }
+
+    .note {
+      font-size: 12px;
+      color: #d0d4eb;
+      opacity: .9;
+      text-align: center;
+    }
+
+    .status {
+      margin-top: 14px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .status.ok {
+      color: #73ffa8;
+    }
+
+    .status.err {
+      color: #ff9393;
+    }
+
+    /* 🍂 Анимированные листья */
+    .leaf {
+      position: fixed;
+      top: -50px;
+      font-size: 24px;
+      opacity: 0.9;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(var(--x)) translateY(110vh) rotate(var(--r));
+        opacity: 0.8;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 16px; }
+      .card { padding: 20px; }
+      .brand h1 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo"></div>
+      <h1>Анкета кандидата</h1>
+    </div>
+
+    <div class="card">
+      <div id="form-root"></div>
+      <div class="note">Нажимая кнопку, вы соглашаетесь на отправку данных в Telegram.</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initFormWidget } from './form-widget.js';
+
+    initFormWidget({
+      mount: '#form-root',
+      botToken: '7172918617:AAGIt9SwQeeyIAjNruzlVpjEXi7trYOUVKM',
+      chatId: '6266166994'
+    });
+  </script>
+
+  <!-- 🍂 Скрипт для падающих листьев -->
+  <script>
+    const emojis = ['🍁','🍂','🍃','🍁','🍂'];
+    const createLeaf = () => {
+      const leaf = document.createElement('div');
+      leaf.className = 'leaf';
+      leaf.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      leaf.style.left = Math.random() * 100 + 'vw';
+      leaf.style.fontSize = (Math.random() * 10 + 20) + 'px';
+      leaf.style.setProperty('--x', (Math.random() * 200 - 100) + 'px');
+      leaf.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg');
+      leaf.style.animationDuration = (Math.random() * 6 + 6) + 's';
+      document.body.appendChild(leaf);
+      setTimeout(() => leaf.remove(), 10000);
+    };
+    setInterval(createLeaf, 800);
+  </script>
+</body>
+</html>
