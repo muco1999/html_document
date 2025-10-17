@@ -3,30 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WireGuard VPN — Полное руководство</title>
+<title data-i18n="doc_title">WireGuard VPN — Полное руководство (Теория + Практика)</title>
 <style>
 :root {
   --bg: #0f172a;
   --fg: #e2e8f0;
+  --muted: #94a3b8;
   --accent: #38bdf8;
-  --code-bg: #1e293b;
+  --ok: #22c55e;
+  --warn: #f59e0b;
+  --code-bg: #111827;
+  --panel-bg: #0b1220;
   --border: #334155;
 }
 body.light {
-  --bg: #f9fafb;
+  --bg: #f8fafc;
   --fg: #0f172a;
+  --muted: #475569;
   --accent: #0284c7;
+  --ok: #16a34a;
+  --warn: #d97706;
   --code-bg: #f1f5f9;
+  --panel-bg: #ffffff;
   --border: #cbd5e1;
 }
+*{box-sizing:border-box}
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   line-height: 1.7;
-  padding: 0;
   margin: 0;
-  transition: background 0.4s, color 0.4s;
+  transition: background .3s,color .3s;
 }
 
 /* ---------- HERO HEADER ---------- */
@@ -40,136 +48,226 @@ body {
 }
 .hero::after {
   content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  position: absolute; inset: 0;
   background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15), transparent 60%);
 }
 .hero img {
-  width: 100px; height: 100px;
+  width: 96px; height: 96px;
   border-radius: 50%;
   border: 3px solid white;
   margin: 0 8px;
   object-fit: cover;
-  z-index: 2;
   position: relative;
 }
-.hero h1 {
-  font-size: 2.4em;
-  margin-top: 15px;
-  text-shadow: 0 0 10px rgba(255,255,255,0.3);
-}
-.hero p {font-size: 1.1em; opacity: 0.95;}
+.hero h1 {font-size: 2.4em; margin: 14px 0 6px; text-shadow: 0 0 10px rgba(255,255,255,.25);}
+.hero p {opacity:.95;}
 
-/* ---------- CONTENT ---------- */
-.container {
-  padding: 40px 12%;
+/* ---------- LAYOUT ---------- */
+.container {padding: 36px 12%; max-width: 1200px; margin: 0 auto;}
+h2 {color: var(--accent); margin-top: 1.6em}
+h3 {color: var(--accent); margin-top: 1.2em; font-weight: 600}
+
+/* ---------- INFO BOXES ---------- */
+.info, .tip, .warn {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 18px 0;
 }
-h2,h3 {color: var(--accent); margin-top: 1.6em;}
+.info .tag, .tip .tag, .warn .tag{
+  display:inline-block; font-size:12px; font-weight:700;
+  padding:2px 8px; border-radius:999px; margin-bottom:8px;
+  letter-spacing:.4px;
+}
+.info .tag{background: rgba(56,189,248,.15); color:#7dd3fc; border:1px dashed #38bdf8;}
+.tip .tag{background: rgba(34,197,94,.15); color:#86efac; border:1px dashed #22c55e;}
+.warn .tag{background: rgba(245,158,11,.15); color:#facc15; border:1px dashed #f59e0b;}
+.mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
+
+/* ---------- CODE ---------- */
 pre {
   position: relative;
-  margin: 16px 0;
+  margin: 14px 0;
   border-left: 4px solid var(--accent);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--code-bg);
   overflow-x: auto;
 }
 code {
   display: block;
-  padding: 10px 14px;
-  font-family: monospace;
-  font-size: 15px;
+  padding: 12px 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 14px;
   color: var(--fg);
+  white-space: pre;
 }
 button.copy {
   position: absolute; top: 6px; right: 6px;
-  background: var(--accent); color: #fff;
-  border: none; border-radius: 6px;
-  padding: 4px 10px; cursor: pointer;
-  font-size: 12px; opacity: 0.85;
+  background: var(--accent); color: #0b1320;
+  border: none; border-radius: 8px;
+  padding: 6px 10px; cursor: pointer;
+  font-size: 12px; font-weight: 700; opacity: .9;
 }
 button.copy:hover {opacity: 1;}
+
+/* ---------- TABLE ---------- */
 table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--code-bg);
-  border-radius: 10px;
+  background: var(--panel-bg);
+  border-radius: 12px;
   overflow: hidden;
   margin: 14px 0;
 }
-th,td {border: 1px solid var(--border); padding: 10px 14px;}
-th {background: var(--accent); color: #fff; text-align: left;}
-a {color: var(--accent); text-decoration: none;}
-a:hover {text-decoration: underline;}
-.box {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px 22px;
-  margin: 18px 0;
-}
+th,td {border: 1px solid var(--border); padding: 10px 14px; vertical-align: top}
+th {background: var(--accent); color: #fff; text-align: left}
+
+/* ---------- FOOTER & TOGGLE ---------- */
 .footer {
   text-align: center;
   padding: 40px 0 30px;
   font-size: 14px;
-  color: var(--border);
+  color: var(--muted);
   border-top: 1px solid var(--border);
 }
 #themeToggle {
   position: fixed; top: 15px; right: 15px;
-  background: var(--accent); color: #fff;
-  border: none; border-radius: 8px;
-  padding: 6px 12px; font-size: 14px;
-  cursor: pointer; opacity: 0.8;
+  background: var(--accent); color: #06131e;
+  border: none; border-radius: 10px;
+  padding: 8px 12px; font-size: 14px;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.25);
   z-index: 10;
 }
-#themeToggle:hover {opacity: 1;}
+#themeToggle:hover {transform: translateY(-1px)}
+kbd{
+  padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:6px;
+  background:var(--panel-bg);font-size:12px
+}
+
+/* ===== Control panel ===== */
+#controlPanel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: var(--panel-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+  font-size: 14px;
+}
+#controlPanel select {
+  background: var(--code-bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-family: inherit;
+  cursor: pointer;
+}
+#controlPanel select:hover { border-color: var(--accent); }
 </style>
 </head>
 <body>
 
 <button id="themeToggle">🌙 Тёмная тема</button>
 
+<!-- ======= LANGUAGE & FONT PANEL ======= -->
+<div id="controlPanel">
+  <div class="lang-select">
+    🌐 <select id="languageSelect" aria-label="Language">
+      <option value="ru">Русский 🇷🇺</option>
+      <option value="en">English 🇬🇧</option>
+      <option value="tj">Тоҷикӣ 🇹🇯</option>
+    </select>
+  </div>
+
+  <div class="font-select">
+    🔤 <select id="fontSizeSelect" aria-label="Font size">
+      <option value="small" data-i18n="font_small">Маленький</option>
+      <option value="normal" selected data-i18n="font_normal">Обычный</option>
+      <option value="large" data-i18n="font_large">Крупный</option>
+    </select>
+  </div>
+</div>
+
 <!-- ======= HEADER SECTION ======= -->
 <section class="hero">
   <img src="myphoto.jpg" alt="Mahmadsharif" title="Mahmadsharif">
   <img src="gpt-logo.png" alt="ChatGPT" title="ChatGPT">
-  <h1>WireGuard VPN — Полное руководство</h1>
-  <p>Автор: <b>Mahmadsharif</b> 💪 совместно с <b>ChatGPT-5</b> ⚙️</p>
+  <h1 data-i18n="hero_title">WireGuard VPN — Полное руководство</h1>
+  <p data-i18n="hero_byline">Автор: <b>Mahmadsharif</b> 💪 совместно с <b>ChatGPT-5</b> ⚙️</p>
 </section>
 
 <div class="container">
 
-<h2>🚀 Шаг 1. Установка WireGuard</h2>
-<pre><button class="copy">📋 Копировать</button><code>apt update -y && apt install -y wireguard qrencode</code></pre>
+<!-- ===================== 0. КРАТКО О WIREGUARD ===================== -->
+<h2 data-i18n="intro_title">Что такое WireGuard — коротко и по делу</h2>
+<div class="info">
+  <span class="tag" data-i18n="tag_theory">💡 Теория</span>
+  <p data-i18n="intro_blurb">WireGuard — быстрый VPN с современным шифрованием. Суть: сервер ↔ клиенты по ключам, трафик идёт через интерфейс wg0.</p>
+  <ul>
+    <li><b>WireGuard</b> — быстрый VPN на базе современного криптографического набора (Curve25519, ChaCha20-Poly1305, BLAKE2s).</li>
+    <li>Туннель создаётся интерфейсом <span class="mono">wg0</span> (виртуальная сеть), а доступ дают пары ключей <b>Server ↔ Client</b>.</li>
+    <li>Каждый клиент получает уникальный IP в подсети (например <span class="mono">10.7.0.0/24</span>) и настраивается в блоке <span class="mono">[Peer]</span>.</li>
+    <li>Параметр <span class="mono">AllowedIPs</span> определяет, какие адреса шлём через туннель (часто <span class="mono">0.0.0.0/0, ::/0</span> — весь трафик).</li>
+  </ul>
+</div>
 
-<h2>🧩 Шаг 2. Настройка сервера</h2>
-<pre><button class="copy">📋 Копировать</button><code>cd /etc/wireguard
+<!-- ===================== 1. УСТАНОВКА ===================== -->
+<h2 data-i18n="step1_title">🚀 Шаг 1. Установка WireGuard</h2>
+<div class="tip"><span class="tag" data-i18n="tag_why">🔎 Зачем</span> <span data-i18n="step1_blurb">Ставим WireGuard и утилиту для QR — удобно подключать телефон.</span></div>
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>apt update -y && apt install -y wireguard qrencode</code></pre>
+
+<!-- ===================== 2. КЛЮЧИ И БАЗОВЫЙ СЕРВЕР ===================== -->
+<h2 data-i18n="step2_title">🧩 Шаг 2. Ключи и базовый конфиг сервера</h2>
+<div class="info">
+  <span class="tag" data-i18n="tag_theory">💡 Теория</span>
+  <p data-i18n="step2_blurb">Генерим ключи: приватный остаётся на сервере, публичный раздаём клиентам.</p>
+</div>
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>cd /etc/wireguard
 umask 077
 wg genkey | tee server_private.key | wg pubkey > server_public.key
 </code></pre>
 
-<pre><button class="copy">📋 Копировать</button><code>cat > /etc/wireguard/wg0.conf <<EOF
+<div class="tip">
+  <span class="tag" data-i18n="tag_what">🛠 Что делает конфиг</span>
+  <span data-i18n="step2_cfg_blurb">Блок [Interface]: ключ сервера, IP подсети, порт прослушивания.</span>
+</div>
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>cat > /etc/wireguard/wg0.conf <<'EOF'
 [Interface]
-PrivateKey = $(cat server_private.key)
+PrivateKey = $(cat /etc/wireguard/server_private.key)
 Address = 10.7.0.1/24
 ListenPort = 51820
 SaveConfig = false
 EOF
 </code></pre>
 
-<h2>🌐 Шаг 3. Разрешаем маршрутизацию</h2>
-<pre><button class="copy">📋 Копировать</button><code>echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+<!-- ===================== 3. МАРШРУТИЗАЦИЯ ===================== -->
+<h2 data-i18n="step3_title">🌐 Шаг 3. Включаем маршрутизацию</h2>
+<div class="info">
+  <span class="tag" data-i18n="tag_theory">💡 Теория</span>
+  <p data-i18n="step3_blurb">ip_forward разрешает серверу пересылать пакеты между интерфейсами.</p>
+</div>
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sysctl -p
 </code></pre>
 
-<h2>🟢 Шаг 4. Запуск сервера</h2>
-<pre><button class="copy">📋 Копировать</button><code>systemctl enable wg-quick@wg0
+<!-- ===================== 4. СТАРТ СЕРВЕРА ===================== -->
+<h2 data-i18n="step4_title">🟢 Шаг 4. Запуск сервера</h2>
+<div class="tip"><span class="tag" data-i18n="tag_why">🛠 Зачем</span> <span data-i18n="step4_blurb">Поднимаем wg0 и включаем автозапуск.</span></div>
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>systemctl enable wg-quick@wg0
 systemctl start wg-quick@wg0
 sudo wg show
 </code></pre>
 
-<h2>🤖 Шаг 5. Скрипт автоматического добавления клиентов</h2>
-<pre><button class="copy">📋 Копировать</button><code>cat > /usr/local/bin/add-wg-client.sh <<'EOF'
+<!-- ===================== 5. СКРИПТ ДОБАВЛЕНИЯ КЛИЕНТОВ ===================== -->
+<h2 data-i18n="step5_title">🤖 Шаг 5. Автодобавление клиентов + QR</h2>
+<div class="info">
+  <span class="tag" data-i18n="tag_how">💡 Как работает</span>
+  <p data-i18n="step5_blurb">Скрипт создаёт ключи, выдаёт IP, правит wg0.conf, генерит конфиг и QR.</p>
+</div>
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>cat > /usr/local/bin/add-wg-client.sh <<'EOF'
 #!/bin/bash
 WG_CONF="/etc/wireguard/wg0.conf"
 WG_DIR="/etc/wireguard"
@@ -181,7 +279,7 @@ CLIENT_PRIV="$WG_DIR/${CLIENT_NAME}_private.key"
 CLIENT_PUB="$WG_DIR/${CLIENT_NAME}_public.key"
 CLIENT_CONF="$WG_DIR/${CLIENT_NAME}.conf"
 wg genkey | tee $CLIENT_PRIV | wg pubkey > $CLIENT_PUB
-LAST_IP=$(grep AllowedIPs $WG_CONF | tail -n1 | awk '{print $3}' | cut -d'.' -f4 | cut -d'/' -f1)
+LAST_IP=$(grep -m1 -oE '10\.7\.0\.[0-9]+' $WG_CONF | awk -F. '{print $4}' | sort -n | tail -1)
 if [ -z "$LAST_IP" ]; then CLIENT_IP="10.7.0.2"; else CLIENT_IP="10.7.0.$((LAST_IP + 1))"; fi
 echo -e "\n[Peer]\n# $CLIENT_NAME\nPublicKey = $(cat $CLIENT_PUB)\nAllowedIPs = ${CLIENT_IP}/32" | tee -a $WG_CONF > /dev/null
 cat > $CLIENT_CONF <<CFG
@@ -196,15 +294,22 @@ Endpoint = $SERVER_IP:$PORT
 AllowedIPs = 0.0.0.0/0, ::/0
 PersistentKeepalive = 25
 CFG
+chmod 600 $CLIENT_CONF $CLIENT_PRIV
 systemctl restart wg-quick@wg0
 echo "✅ Клиент '$CLIENT_NAME' добавлен!"
+echo "📄 Конфиг: $CLIENT_CONF"
 qrencode -t ansiutf8 < $CLIENT_CONF
 EOF
 chmod +x /usr/local/bin/add-wg-client.sh
 </code></pre>
 
-<h2>❌ Шаг 6. Скрипт удаления клиента</h2>
-<pre><button class="copy">📋 Копировать</button><code>cat > /usr/local/bin/remove-wg-client.sh <<'EOF'
+<!-- ===================== 6. СКРИПТ УДАЛЕНИЯ КЛИЕНТОВ ===================== -->
+<h2 data-i18n="step6_title">❌ Шаг 6. Удаление клиента</h2>
+<div class="info">
+  <span class="tag" data-i18n="tag_how">💡 Как работает</span>
+  <p data-i18n="step6_blurb">Ищем по публичному ключу блок [Peer], вырезаем его и чистим файлы клиента.</p>
+</div>
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>cat > /usr/local/bin/remove-wg-client.sh <<'EOF'
 #!/bin/bash
 WG_CONF="/etc/wireguard/wg0.conf"
 WG_DIR="/etc/wireguard"
@@ -214,7 +319,10 @@ CLIENT_PUB="$WG_DIR/${CLIENT_NAME}_public.key"
 CLIENT_CONF="$WG_DIR/${CLIENT_NAME}.conf"
 if [ ! -f "$CLIENT_PUB" ]; then echo "⚠️ Клиент '$CLIENT_NAME' не найден!"; exit 1; fi
 PUB_KEY=$(cat "$CLIENT_PUB")
-sed -i "/$PUB_KEY/,+2d" "$WG_CONF"
+# Удаляем блок [Peer] c этим ключом (до первой пустой строки)
+awk -v key="$PUB_KEY" 'BEGIN{skip=0} /^\[Peer\]/{block=1} block&&$0 ~ "PublicKey = "key{skip=1}
+skip&&NF==0{skip=0; block=0; next}
+skip{next} {print}' "$WG_CONF" > "${WG_CONF}.tmp" && mv "${WG_CONF}.tmp" "$WG_CONF"
 rm -f "$CLIENT_PRIV" "$CLIENT_PUB" "$CLIENT_CONF"
 systemctl restart wg-quick@wg0
 echo "✅ Клиент '$CLIENT_NAME' полностью удалён!"
@@ -222,24 +330,140 @@ EOF
 chmod +x /usr/local/bin/remove-wg-client.sh
 </code></pre>
 
-<h2>🧭 Использование</h2>
+<!-- ===================== 7. ИСПОЛЬЗОВАНИЕ ===================== -->
+<h2 data-i18n="usage_title">🧭 Использование</h2>
 <table>
-<tr><th>Действие</th><th>Команда</th></tr>
-<tr><td>Добавить клиента</td><td><code>sudo add-wg-client.sh</code></td></tr>
-<tr><td>Удалить клиента</td><td><code>sudo remove-wg-client.sh</code></td></tr>
-<tr><td>Проверить подключения</td><td><code>sudo wg show</code></td></tr>
+  <tr>
+    <th data-i18n="tbl_action">Действие</th>
+    <th data-i18n="tbl_command">Команда</th>
+    <th data-i18n="tbl_comment">Комментарий</th>
+  </tr>
+  <tr>
+    <td data-i18n="usage_add">Добавить клиента</td>
+    <td><code>sudo add-wg-client.sh</code></td>
+    <td data-i18n="usage_add_note">Создаёт ключи, IP, добавляет в сервер и показывает QR.</td>
+  </tr>
+  <tr>
+    <td data-i18n="usage_del">Удалить клиента</td>
+    <td><code>sudo remove-wg-client.sh</code></td>
+    <td data-i18n="usage_del_note">Удаляет [Peer] + ключи + конфиг клиента.</td>
+  </tr>
+  <tr>
+    <td data-i18n="usage_show">Проверить состояние</td>
+    <td><code>sudo wg show</code></td>
+    <td data-i18n="usage_show_note">Список пиров, трафик, рукопожатия.</td>
+  </tr>
 </table>
 
-<h2>💡 Советы безопасности</h2>
-<ul>
-<li>Храни приватные ключи только на сервере.</li>
-<li>Если устройство утеряно — удали его скриптом.</li>
-<li>Делай резервную копию <code>/etc/wireguard/wg0.conf</code>.</li>
-</ul>
-
+<!-- ===================== 8. БЕЗОПАСНОСТЬ И НЮАНСЫ ===================== -->
+<h2 data-i18n="security_title">🔐 Безопасность и нюансы</h2>
+<div class="tip">
+  <span class="tag" data-i18n="tag_reco">✅ Рекомендации</span>
+  <ul>
+    <li>Права на файлы: <span class="mono">chmod 600 /etc/wireguard/*.key /etc/wireguard/*.conf</span></li>
+    <li>Резервная копия: <span class="mono">cp /etc/wireguard/wg0.conf /etc/wireguard/wg0.conf.bak</span></li>
+    <li data-i18n="security_privkey">Никому не отдавай приватные ключи.</li>
+  </ul>
+</div>
+<div class="warn">
+  <span class="tag" data-i18n="tag_notes">⚠️ Если интернет не ходит</span>
+  <ul>
+    <li data-i18n="security_forward">Проверь ip_forward (шаг 3).</li>
+    <li data-i18n="security_port">Открой порт 51820/UDP на фаерволе.</li>
+    <li data-i18n="security_nat">Для выхода в интернет включи NAT (ниже).</li>
+  </ul>
 </div>
 
-<div class="footer">
+<!-- ===================== 9. NAT и доступ клиентов ===================== -->
+<h2 data-i18n="nat_title">🌉 NAT и доступ клиентов в Интернет</h2>
+
+<div class="info">
+  <span class="tag" data-i18n="tag_theory">💡 Теория</span>
+  <p data-i18n="nat_blurb">NAT маскирует адреса из wg0 под внешний интерфейс (например, eth0), чтобы клиенты выходили в интернет.</p>
+</div>
+
+<div class="tip">
+  <span class="tag" data-i18n="nat_ipt_tag">🛠 Iptables — классический способ</span>
+</div>
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>EXT_IF=eth0
+iptables -t nat -A POSTROUTING -o $EXT_IF -j MASQUERADE
+iptables -A FORWARD -i wg0 -o $EXT_IF -j ACCEPT
+iptables -A FORWARD -i $EXT_IF -o wg0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+# Сохранить правила
+apt install -y iptables-persistent
+netfilter-persistent save
+</code></pre>
+
+<div class="tip">
+  <span class="tag" data-i18n="nat_nft_tag">🧱 Nftables — современный способ</span>
+</div>
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>EXT_IF=eth0
+nft add table ip wg
+nft 'add chain ip wg postrouting { type nat hook postrouting priority 100; }'
+nft add rule ip wg postrouting oifname $EXT_IF masquerade
+nft 'add chain ip wg forward { type filter hook forward priority 0; }'
+nft add rule ip wg forward iifname "wg0" oifname $EXT_IF accept
+nft add rule ip wg forward iifname $EXT_IF oifname "wg0" ct state related,established accept
+</code></pre>
+
+<div class="warn">
+  <span class="tag" data-i18n="tag_notes">⚠️ Замечания</span>
+  <ul>
+    <li data-i18n="nat_iface">Поменяй eth0 на свой внешний интерфейс (подсказка: <span class="mono">ip a</span>).</li>
+    <li data-i18n="nat_forward">Убедись, что <span class="mono">net.ipv4.ip_forward=1</span> включён.</li>
+    <li data-i18n="nat_firewalld">Если используешь firewalld — включай маскарадинг там.</li>
+  </ul>
+</div>
+
+<!-- ===================== 10. ПРОВЕРКА ===================== -->
+<h2 data-i18n="check_title">🔍 Скрипт проверки состояния WireGuard</h2>
+
+<div class="info">
+  <span class="tag" data-i18n="tag_what">💡 Что делает</span>
+  <p data-i18n="check_blurb">Скрипт показывает статус сервиса, порт, ip_forward и список клиентов.</p>
+</div>
+
+<pre><button class="copy" data-i18n="btn_copy">📋 Копировать</button><code>cat > /usr/local/bin/check-wg.sh <<'EOF'
+#!/bin/bash
+echo "===== 🔍 Проверка WireGuard ====="
+WG_IF="wg0"
+PORT=51820
+EXT_IF=$(ip route get 8.8.8.8 2>/dev/null | awk '{print $5; exit}')
+echo "Интерфейс сервера: $WG_IF"
+echo "Внешний интерфейс: $EXT_IF"
+echo
+
+echo "➡️  Проверяем статус службы:"
+systemctl is-active wg-quick@$WG_IF && echo "✅ Сервис активен" || echo "❌ Не запущен"
+
+echo
+echo "➡️  Проверяем IP Forward:"
+grep -q 1 /proc/sys/net/ipv4/ip_forward && echo "✅ Включён" || echo "⚠️ Отключён"
+
+echo
+echo "➡️  Проверяем открытые порты:"
+ss -ulpn | grep $PORT >/dev/null && echo "✅ Порт $PORT/UDP открыт" || echo "⚠️ Порт $PORT/UDP не найден"
+
+echo
+echo "➡️  Подключённые клиенты:"
+wg show $WG_IF 2>/dev/null | grep -E 'peer|endpoint|handshake|transfer' || echo "— клиентов нет —"
+echo
+echo "Проверка завершена ✅"
+EOF
+chmod +x /usr/local/bin/check-wg.sh
+</code></pre>
+
+<h3 data-i18n="use_title">📘 Использование</h3>
+<table>
+<tr><th data-i18n="tbl_command">Команда</th><th data-i18n="tbl_purpose">Назначение</th></tr>
+<tr><td><code>sudo check-wg.sh</code></td><td data-i18n="use_check">Проверяет состояние сервера и подключений.</td></tr>
+<tr><td><code>sudo systemctl restart wg-quick@wg0</code></td><td data-i18n="use_restart">Перезапуск wg0 после правок.</td></tr>
+<tr><td><code>sudo wg show</code></td><td data-i18n="use_show">Список клиентов и трафика.</td></tr>
+</table>
+
+</div> <!-- container end -->
+
+<div class="footer" data-i18n="footer">
 Автор — <b>Mahmadsharif</b> 💪 | Создано при помощи <b>ChatGPT-5</b> ⚙️
 </div>
 
@@ -247,17 +471,257 @@ chmod +x /usr/local/bin/remove-wg-client.sh
 // Копирование кода
 document.querySelectorAll("button.copy").forEach(btn=>{
   btn.addEventListener("click",()=>{
-    const code=btn.nextElementSibling.innerText;
+    const code = btn.nextElementSibling.innerText;
     navigator.clipboard.writeText(code);
-    btn.innerText="✅ Скопировано!";
+    btn.innerText = "✅ Скопировано!";
     setTimeout(()=>btn.innerText="📋 Копировать",1500);
   });
 });
+
 // Переключатель темы
 const toggle=document.getElementById("themeToggle");
-toggle.addEventListener("click",()=>{
-  document.body.classList.toggle("light");
+function setThemeLabel(){
   toggle.textContent=document.body.classList.contains("light")?"🌙 Тёмная тема":"☀️ Светлая тема";
+}
+toggle.addEventListener("click",()=>{document.body.classList.toggle("light"); setThemeLabel();});
+setThemeLabel();
+
+// ======= Язык и размер шрифта =======
+const langSelect = document.getElementById("languageSelect");
+const fontSelect = document.getElementById("fontSizeSelect");
+
+// словарь переводов (коротко и понятно)
+const i18n = {
+  ru: {
+    doc_title:"WireGuard VPN — Полное руководство (Теория + Практика)",
+    hero_title:"WireGuard VPN — Полное руководство",
+    hero_byline:"Автор: <b>Mahmadsharif</b> 💪 совместно с <b>ChatGPT-5</b> ⚙️",
+
+    intro_title:"Что такое WireGuard — коротко и по делу",
+    intro_blurb:"WireGuard — быстрый VPN с современным шифрованием. Суть: сервер ↔ клиенты по ключам, трафик идёт через интерфейс wg0.",
+
+    step1_title:"🚀 Шаг 1. Установка WireGuard",
+    step1_blurb:"Ставим WireGuard и утилиту для QR — удобно подключать телефон.",
+
+    step2_title:"🧩 Шаг 2. Ключи и базовый конфиг сервера",
+    step2_blurb:"Генерим ключи: приватный остаётся на сервере, публичный раздаём клиентам.",
+    step2_cfg_blurb:"Блок [Interface]: ключ сервера, IP подсети, порт прослушивания.",
+
+    step3_title:"🌐 Шаг 3. Включаем маршрутизацию",
+    step3_blurb:"ip_forward разрешает серверу пересылать пакеты между интерфейсами.",
+
+    step4_title:"🟢 Шаг 4. Запуск сервера",
+    step4_blurb:"Поднимаем wg0 и включаем автозапуск.",
+
+    step5_title:"🤖 Шаг 5. Автодобавление клиентов + QR",
+    step5_blurb:"Скрипт создаёт ключи, выдаёт IP, правит wg0.conf, генерит конфиг и QR.",
+
+    step6_title:"❌ Шаг 6. Удаление клиента",
+    step6_blurb:"Ищем по публичному ключу блок [Peer], вырезаем его и чистим файлы клиента.",
+
+    usage_title:"🧭 Использование",
+    tbl_action:"Действие", tbl_command:"Команда", tbl_comment:"Комментарий",
+    usage_add:"Добавить клиента", usage_add_note:"Создаёт ключи, IP, добавляет в сервер и показывает QR.",
+    usage_del:"Удалить клиента", usage_del_note:"Удаляет [Peer] + ключи + конфиг клиента.",
+    usage_show:"Проверить состояние", usage_show_note:"Список пиров, трафик, рукопожатия.",
+
+    security_title:"🔐 Безопасность и нюансы",
+    security_privkey:"Никому не отдавай приватные ключи.",
+    security_forward:"Проверь ip_forward (шаг 3).",
+    security_port:"Открой порт 51820/UDP на фаерволе.",
+    security_nat:"Для выхода в интернет включи NAT (ниже).",
+
+    nat_title:"🌉 NAT и доступ клиентов в Интернет",
+    nat_blurb:"NAT маскирует адреса из wg0 под внешний интерфейс (например, eth0), чтобы клиенты выходили в интернет.",
+    nat_ipt_tag:"🛠 Iptables — классический способ",
+    nat_nft_tag:"🧱 Nftables — современный способ",
+    nat_iface:"Поменяй eth0 на свой внешний интерфейс (подсказка: ip a).",
+    nat_forward:"Убедись, что net.ipv4.ip_forward=1 включён.",
+    nat_firewalld:"Если используешь firewalld — включай маскарадинг там.",
+
+    check_title:"🔍 Скрипт проверки состояния WireGuard",
+    check_blurb:"Скрипт показывает статус сервиса, порт, ip_forward и список клиентов.",
+    use_title:"📘 Использование",
+    tbl_purpose:"Назначение",
+    use_check:"Проверяет состояние сервера и подключений.",
+    use_restart:"Перезапуск wg0 после правок.",
+    use_show:"Список клиентов и трафика.",
+
+    tag_theory:"💡 Теория", tag_why:"🔎 Зачем", tag_how:"💡 Как работает", tag_what:"🛠 Что делает конфиг", tag_reco:"✅ Рекомендации", tag_notes:"⚠️ Замечания",
+
+    btn_copy:"📋 Копировать",
+    font_small:"Маленький", font_normal:"Обычный", font_large:"Крупный",
+    footer:"Автор — <b>Mahmadsharif</b> 💪 | Создано при помощи <b>ChatGPT-5</b> ⚙️",
+  },
+  en: {
+    doc_title:"WireGuard VPN — Full Guide (Theory + Practice)",
+    hero_title:"WireGuard VPN — Full Guide",
+    hero_byline:"Author: <b>Mahmadsharif</b> 💪 with <b>ChatGPT-5</b> ⚙️",
+
+    intro_title:"What is WireGuard — in short",
+    intro_blurb:"WireGuard is a fast VPN with modern crypto. Idea: server ↔ clients via keys, traffic through wg0 interface.",
+
+    step1_title:"🚀 Step 1. Install WireGuard",
+    step1_blurb:"Install WireGuard and QR tool to add phones easily.",
+
+    step2_title:"🧩 Step 2. Server keys & base config",
+    step2_blurb:"Generate keys: keep private on server, share public to clients.",
+    step2_cfg_blurb:"[Interface] block: server key, subnet IP, listening port.",
+
+    step3_title:"🌐 Step 3. Enable routing",
+    step3_blurb:"ip_forward lets the server forward packets between interfaces.",
+
+    step4_title:"🟢 Step 4. Start the server",
+    step4_blurb:"Bring up wg0 and enable autostart.",
+
+    step5_title:"🤖 Step 5. Auto-add clients + QR",
+    step5_blurb:"Script makes keys, assigns IP, edits wg0.conf, creates config & QR.",
+
+    step6_title:"❌ Step 6. Remove a client",
+    step6_blurb:"Find client's [Peer] by public key, delete it and clean files.",
+
+    usage_title:"🧭 Usage",
+    tbl_action:"Action", tbl_command:"Command", tbl_comment:"Comment",
+    usage_add:"Add a client", usage_add_note:"Creates keys, IP, adds to server and shows QR.",
+    usage_del:"Remove a client", usage_del_note:"Deletes [Peer] + keys + client config.",
+    usage_show:"Show status", usage_show_note:"Peers list, traffic, handshakes.",
+
+    security_title:"🔐 Security & gotchas",
+    security_privkey:"Never share private keys.",
+    security_forward:"Check ip_forward (step 3).",
+    security_port:"Open 51820/UDP on firewall.",
+    security_nat:"Enable NAT for internet access (below).",
+
+    nat_title:"🌉 NAT & client internet access",
+    nat_blurb:"NAT hides wg0 addresses behind external iface (e.g., eth0) for internet access.",
+    nat_ipt_tag:"🛠 Iptables — classic way",
+    nat_nft_tag:"🧱 Nftables — modern way",
+    nat_iface:"Replace eth0 with your external iface (tip: ip a).",
+    nat_forward:"Ensure net.ipv4.ip_forward=1 is enabled.",
+    nat_firewalld:"If using firewalld, enable masquerade there.",
+
+    check_title:"🔍 WireGuard status check script",
+    check_blurb:"Shows service status, port, ip_forward and clients.",
+    use_title:"📘 Usage",
+    tbl_purpose:"Purpose",
+    use_check:"Check server & peers status.",
+    use_restart:"Restart wg0 after changes.",
+    use_show:"List clients and traffic.",
+
+    tag_theory:"💡 Theory", tag_why:"🔎 Why", tag_how:"💡 How it works", tag_what:"🛠 What the config does", tag_reco:"✅ Tips", tag_notes:"⚠️ Notes",
+
+    btn_copy:"📋 Copy",
+    font_small:"Small", font_normal:"Normal", font_large:"Large",
+    footer:"Author — <b>Mahmadsharif</b> 💪 | Made with <b>ChatGPT-5</b> ⚙️",
+  },
+  tj: {
+    doc_title:"WireGuard VPN — Дастури пурра (Назария + Амал)",
+    hero_title:"WireGuard VPN — Дастури кӯтоҳ ва фаҳмо",
+    hero_byline:"Муаллиф: <b>Mahmadsharif</b> 💪 бо ёрии <b>ChatGPT-5</b> ⚙️",
+
+    intro_title:"WireGuard чист — кӯтоҳ",
+    intro_blurb:"WireGuard — VPN-и тез бо рамзгузории нав. Сервер ↔ муштариён бо калидҳо, трафик аз wg0 мегузарад.",
+
+    step1_title:"🚀 Қадами 1. Насби WireGuard",
+    step1_blurb:"WireGuard ва асбоби QR-ро мегузорем — пайваст кардани телефон осон мешавад.",
+
+    step2_title:"🧩 Қадами 2. Калидҳо ва конфиги асосӣ",
+    step2_blurb:"Калидҳо месозем: махфӣ дар сервер мемонад, умумиро ба муштариён медиҳем.",
+    step2_cfg_blurb:"[Interface]: калиди сервер, IP зершаъба, порти гӯшкунӣ.",
+
+    step3_title:"🌐 Қадами 3. Форварди IP",
+    step3_blurb:"ip_forward ба сервер иҷозат медиҳад бастаҳо байни интерфейсҳо гузаранд.",
+
+    step4_title:"🟢 Қадами 4. Ба кор андохтан",
+    step4_blurb:"wg0-ро боло мебарем ва автозапускро фаъол мекунем.",
+
+    step5_title:"🤖 Қадами 5. Иловаи худкори муштарӣ + QR",
+    step5_blurb:"Скрипт калид месозад, IP медиҳад, wg0.conf-ро менависад, конфигу QR тавлид мекунад.",
+
+    step6_title:"❌ Қадами 6. Тозакунии муштарӣ",
+    step6_blurb:"[Peer]-и муштарӣ бо калиди умумӣ ёфта шуда, ҳазф мегардад, файлҳо тоза мешаванд.",
+
+    usage_title:"🧭 Истифода",
+    tbl_action:"Амал", tbl_command:"Фармон", tbl_comment:"Шарҳ",
+    usage_add:"Иловаи муштарӣ", usage_add_note:"Калид, IP месозад, ба сервер зам мекунад ва QR нишон медиҳад.",
+    usage_del:"Ҳазфи муштарӣ", usage_del_note:"[Peer] + калидҳо + конфиги муштариро пок мекунад.",
+    usage_show:"Сатҳи ҳолат", usage_show_note:"Рӯйхати пирҳо, трафик, дастфишориҳо.",
+
+    security_title:"🔐 Бехатарӣ ва нозукиҳо",
+    security_privkey:"Калиди махфиро ба касе надиҳ.",
+    security_forward:"ip_forward-ро санҷ (қадами 3).",
+    security_port:"Порти 51820/UDP-ро дар фаервол боз кун.",
+    security_nat:"Барои интернет NAT-ро фаъол соз (поён).",
+
+    nat_title:"🌉 NAT ва интернети муштариён",
+    nat_blurb:"NAT суроғаҳои wg0-ро зери интерфейси беруна (масалан, eth0) пинҳон мекунад.",
+    nat_ipt_tag:"🛠 Iptables — роҳи классикӣ",
+    nat_nft_tag:"🧱 Nftables — роҳи муосир",
+    nat_iface:"eth0-ро ба интерфейси берунии худ иваз кун (ишора: ip a).",
+    nat_forward:"Боварӣ ҳосил кун net.ipv4.ip_forward=1 фаъол аст.",
+    nat_firewalld:"Агар firewalld дорӣ — маскарадро дар он фаъол намо.",
+
+    check_title:"🔍 Скрипти санҷиши ҳолати WireGuard",
+    check_blurb:"Ҳолати сервис, порт, ip_forward ва рӯйхати муштариёнро нишон медиҳад.",
+    use_title:"📘 Истифода",
+    tbl_purpose:"Мақсад",
+    use_check:"Ҳолати серверу пайвастҳоро месанҷад.",
+    use_restart:"wg0-ро пас аз тағйирот аз нав оғоз мекунад.",
+    use_show:"Рӯйхати муштариён ва трафик.",
+
+    tag_theory:"💡 Назария", tag_why:"🔎 Барои чӣ", tag_how:"💡 Чӣ гуна кор мекунад", tag_what:"🛠 Конфиг чӣ мекунад", tag_reco:"✅ Маслиҳатҳо", tag_notes:"⚠️ Эзоҳҳо",
+
+    btn_copy:"📋 Нусха",
+    font_small:"Хурд", font_normal:"Оддӣ", font_large:"Калон",
+    footer:"Муаллиф — <b>Mahmadsharif</b> 💪 | Бо ёрии <b>ChatGPT-5</b> ⚙️",
+  }
+};
+
+// helpers
+function applyFontSize(size) {
+  document.body.style.fontSize =
+    size === "small" ? "14px" :
+    size === "large" ? "18px" : "16px";
+}
+
+function applyTranslations(lang) {
+  const dict = i18n[lang] || i18n.ru;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    if (dict[key]) el.innerHTML = dict[key];
+  });
+  // обновить тайтл окна
+  if (dict.doc_title) document.title = dict.doc_title;
+  // обновить подписи размеров шрифта в селекте
+  document.querySelectorAll("#fontSizeSelect option").forEach(opt=>{
+    const key = opt.getAttribute("data-i18n");
+    if (key && dict[key]) opt.textContent = dict[key];
+  });
+  // кнопки копирования (динамически)
+  document.querySelectorAll("button.copy").forEach(btn=>{
+    btn.textContent = dict.btn_copy || "📋 Copy";
+  });
+}
+
+// загрузка сохранённых настроек
+const savedLang = localStorage.getItem("wg_lang") || "ru";
+const savedFont = localStorage.getItem("wg_font") || "normal";
+document.getElementById("languageSelect").value = savedLang;
+document.getElementById("fontSizeSelect").value = savedFont;
+applyFontSize(savedFont);
+applyTranslations(savedLang);
+
+// обработчики выбора
+langSelect.addEventListener("change", e=>{
+  const lang = e.target.value;
+  localStorage.setItem("wg_lang", lang);
+  applyTranslations(lang);
+});
+
+fontSelect.addEventListener("change", e=>{
+  const size = e.target.value;
+  localStorage.setItem("wg_font", size);
+  applyFontSize(size);
 });
 </script>
 
