@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Полная инструкция Git + SSH + GitHub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0d1117;
+        color: #e6edf3;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    h1, h2 {
+        color: #00c3ff;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .step {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    code, pre {
+        background: #1e252e;
+        color: #3ce2ff;
+        padding: 10px;
+        border-radius: 8px;
+        display: block;
+        overflow: auto;
+        font-size: 14px;
+    }
+    a {
+        color: #58a6ff;
+        text-decoration: none;
+    }
+    .success {
+        background: #238636;
+        padding: 10px;
+        border-radius: 6px;
+        display: inline-block;
+        margin-top: 10px;
+    }
+    .footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 14px;
+        opacity: 0.7;
+    }
+</style>
+</head>
+<body>
+
+<h1>✅ Полная инструкция: SSH → Git → GitHub</h1>
+<h2>Локальный проект → Приватный репозиторий</h2>
+
+<div class="step">
+    <h3>🔐 ШАГ A — Создаём SSH-ключ и подключаем его к GitHub</h3>
+    <pre>ssh-keygen -t ed25519 -C "your_email@example.com"</pre>
+    <p>👉 Введите email, который используется в GitHub.</p>
+
+    <p>Файлы создадутся здесь:</p>
+    <pre>~/.ssh/id_ed25519
+~/.ssh/id_ed25519.pub</pre>
+
+    <h4>A2️⃣ Запускаем SSH-агент</h4>
+    <pre>eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519</pre>
+
+    <h4>A3️⃣ Копируем открытый ключ</h4>
+    <pre>cat ~/.ssh/id_ed25519.pub</pre>
+
+    <p>Скопируй полностью строку, например:</p>
+    <pre>ssh-ed25519 AAAA... mucoev2222@gmail.com</pre>
+
+    <h4>A4️⃣ Добавляем ключ в GitHub</h4>
+    <p>Перейти: <a href="https://github.com/settings/keys" target="_blank">GitHub SSH Keys</a> → New SSH Key → вставляем → Save ✅</p>
+
+    <h4>A5️⃣ Проверяем соединение</h4>
+    <pre>ssh -T git@github.com</pre>
+
+    <p class="success">✅ Hi muco1999! You've successfully authenticated.</p>
+</div>
+
+<div class="step">
+    <h3>🚀 ШАГ B — Привязка локального проекта к GitHub</h3>
+    <pre>cd ~/PycharmProjects/fastapi_info</pre>
+
+    <h4>B1️⃣ Инициализация Git</h4>
+    <pre>git init
+git branch -M main</pre>
+
+    <h4>B2️⃣ Добавляем файлы</h4>
+    <pre>git add .
+git commit -m "Initial commit"</pre>
+
+    <h4>B3️⃣ Подключаем репозиторий по SSH</h4>
+    <pre>git remote add origin git@github.com:muco1999/fastapi_info.git</pre>
+
+    <h4>B4️⃣ Забираем изменения с GitHub</h4>
+    <pre>git config pull.rebase false
+git pull origin main --allow-unrelated-histories</pre>
+
+    <p>Если откроется nano:</p>
+    <pre>Ctrl + O → Enter → Ctrl + X ✅</pre>
+
+    <h4>B5️⃣ Загружаем проект на GitHub 🎉</h4>
+    <pre>git push -u origin main</pre>
+
+    <p class="success">
+        ✅ Всё готово!<br>
+        SSH работает — Git синхронизирован — проект загружен!
+    </p>
+</div>
+
+<p class="footer">© 2025 | Сделано Mahmadsharif ❤️ при участии GPT-5 🤖</p>
+
+</body>
+</html>
