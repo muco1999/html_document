@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VPN — Инструкция подключения</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #0e0f11;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+    header {
+        padding: 20px;
+        font-size: 26px;
+        font-weight: bold;
+        background: #1c1f24;
+        border-bottom: 2px solid #333;
+    }
+    .section {
+        padding: 25px 15px;
+        max-width: 600px;
+        margin: auto;
+    }
+    .box {
+        background: #1a1c20;
+        padding: 18px;
+        border-radius: 12px;
+        margin-top: 18px;
+        border: 1px solid #333;
+    }
+    a.button {
+        display: block;
+        margin: 12px 0;
+        padding: 12px;
+        background: #007bff;
+        border-radius: 10px;
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    img {
+        width: 100%;
+        max-width: 480px;
+        border-radius: 12px;
+        margin-top: 10px;
+        border: 1px solid #444;
+    }
+
+    /* ✅ Контейнер для адаптивного видео без обрезки */
+    .video-container {
+        width: 100%;
+        max-width: 480px;
+        margin: 10px auto;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #333;
+        background: #000;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Видео заполняет контейнер, без обрезки */
+    .video-container video,
+    .video-container iframe {
+        width: 100%;
+        height: auto;
+        display: block;
+        border: none;
+    }
+
+    footer {
+        margin: 30px 0 15px;
+        font-size: 14px;
+        color: #888;
+    }
+
+    /* 📱 Мобильная адаптация */
+    @media (max-width: 600px) {
+        header { font-size: 22px; }
+        h3 { font-size: 18px; }
+        .box { padding: 15px; }
+        a.button { font-size: 15px; }
+        .video-container { max-width: 100%; }
+    }
+</style>
+</head>
+<body>
+
+<header>Как подключить VPN</header>
+
+<div class="section">
+
+    <div class="box">
+        <h3>1️⃣ Скачайте WireGuard</h3>
+        <a class="button" href="https://play.google.com/store/apps/details?id=com.wireguard.android">📲 Android</a>
+        <a class="button" href="https://apps.apple.com/app/wireguard/id1441195209">🍎 iPhone</a>
+        <a class="button" href="https://www.wireguard.com/install/">🖥 Windows / macOS</a>
+
+        <img src="wg_как подключить.png" alt="WireGuard">
+    </div>
+
+    <div class="box">
+        <h3>2️⃣ Получите конфиг в Telegram-боте</h3>
+        <p>Откройте бота → «🔐 Мой VPN» → выберите DNS → скачайте 📄 .conf</p>
+        <img src="https://via.placeholder.com/480x200?text=Bot+Config+Step" alt="Bot Step">
+    </div>
+
+    <div class="box">
+        <h3>3️⃣ Импортируйте конфиг в WireGuard</h3>
+        <p>Импорт → подключить ✅</p>
+
+        <!-- 🎬 Видео 1 -->
+        <div class="video-container">
+            <video controls>
+                <source src="1.mp4" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        </div>
+
+        <!-- 🎬 Видео 2 -->
+        <div class="video-container">
+            <video controls>
+                <source src="2.mp4" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        </div>
+    </div>
+
+    <div class="box">
+        <h3>Важно 🙌</h3>
+        <p>После подключения интернет работает через VPN</p>
+        <p>Если пропал интернет — просто отключите VPN в приложении</p>
+    </div>
+
+    <div class="box">
+        <h3>Нужна помощь?</h3>
+        <p>Напишите нам в Telegram 👇</p>
+        <a class="button" href="https://t.me/musoev13">📩 Поддержка</a>
+        <img src="https://via.placeholder.com/480x200?text=Support+Banner" alt="Support Banner">
+    </div>
+
+</div>
+
+<footer>© 2025 VPN Service</footer>
+
+</body>
+</html>
