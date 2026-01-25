@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Speed Test</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 30px;
+      background: #0f172a;
+      color: #fff;
+    }
+    button {
+      padding: 15px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #22c55e;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>📶 Проверка скорости интернета</h2>
+<button onclick="startTest()">Начать тест</button>
+<div id="result"></div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.expand();
+
+async function startTest() {
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = "⏳ Тестирование...";
+
+  const sizeMB = 10;
+  const url = "https://speed.cloudflare.com/__down?bytes=" + sizeMB * 1024 * 1024;
+
+  const start = performance.now();
+  const res = await fetch(url);
+  const data = await res.blob();
+  const end = performance.now();
+
+  const seconds = (end - start) / 1000;
+  const speed = (sizeMB * 8 / seconds).toFixed(2); // Mbps
+
+  resultDiv.innerHTML = ✅ Скорость: <b>${speed} Mbps</b>;
+
+  tg.sendData(JSON.stringify({
+    speed_mbps: speed,
+    time: new Date().toISOString()
+  }));
+}
+</script>
+
+</body>
+</html>
