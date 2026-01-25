@@ -51,7 +51,7 @@ async function startTest() {
   const seconds = (end - start) / 1000;
   const speed = (sizeMB * 8 / seconds).toFixed(2); // Mbps
 
-  resultDiv.innerHTML = ✅ Скорость: <b>${speed} Mbps</b>;
+  resultDiv.innerHTML = `✅ Скорость: <b>${speed} Mbps</b>`;
 
   tg.sendData(JSON.stringify({
     speed_mbps: speed,
