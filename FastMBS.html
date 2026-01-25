@@ -1,60 +1,295 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Speed Test</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      padding: 30px;
-      background: #0f172a;
-      color: #fff;
-    }
-    button {
-      padding: 15px 25px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      background: #22c55e;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 18px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NET::SCANNER</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+@keyframes glitch {
+  0% { text-shadow: 2px 0 red, -2px 0 cyan; }
+  50% { text-shadow: -2px 0 red, 2px 0 cyan; }
+  100% { text-shadow: 2px 0 red, -2px 0 cyan; }
+}
+
+body {
+  margin: 0;
+  font-family: "Courier New", monospace;
+  background: #000;
+  color: #00ffcc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03) 1px,
+    transparent 1px
+  );
+  background-size: 100% 4px;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid #00ffcc;
+  padding: 25px;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.9);
+  box-shadow: 0 0 50px rgba(0,255,204,0.3);
+}
+
+.title {
+  text-align: center;
+  font-size: 22px;
+  animation: glitch 1s infinite;
+}
+
+.terminal {
+  margin-top: 15px;
+  background: #020617;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  height: 210px;
+  overflow-y: auto;
+  color: #22c55e;
+}
+
+.progress {
+  margin-top: 15px;
+  height: 8px;
+  background: #020617;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #00ffcc;
+}
+
+.bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #00ffcc, #22c55e);
+  transition: width 0.2s;
+}
+
+.btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  font-size: 16px;
+  background: transparent;
+  border: 1px solid #00ffcc;
+  color: #00ffcc;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: rgba(0,255,204,0.15);
+}
+  .resultBox {
+  background: #020617;
+  border: 1px solid #00ffcc;
+  border-radius: 14px;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+.bigSpeed {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  color: #22c55e;
+  margin-bottom: 15px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.grid div {
+  background: #000;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,255,204,0.3);
+}
+
+.grid span {
+  color: #22c55e;
+  word-break: break-all;
+}
+</style>
 </head>
+
 <body>
 
-<h2>📶 Проверка скорости интернета</h2>
-<button onclick="startTest()">Начать тест</button>
-<div id="result"></div>
+<div class="scanline"></div>
+
+<div class="card">
+  <div id="resultUI" style="display:none; margin-top:20px;">
+  <div class="resultBox">
+    <div class="bigSpeed" id="finalSpeed">0 Mbps</div>
+
+    <div class="grid">
+      <div><b>IP</b><br><span id="r_ip"></span></div>
+      <div><b>Country</b><br><span id="r_country"></span></div>
+      <div><b>City</b><br><span id="r_city"></span></div>
+      <div><b>ISP</b><br><span id="r_isp"></span></div>
+      <div><b>Device</b><br><span id="r_device"></span></div>
+      <div><b>Browser</b><br><span id="r_browser"></span></div>
+    </div>
+  </div>
+</div>
+  <div class="title">NET::SCANNER</div>
+
+  <div class="terminal" id="terminal">> ready...</div>
+
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <button class="btn" onclick="startScan()">START SCAN</button>
+</div>
 
 <script>
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-async function startTest() {
-  const resultDiv = document.getElementById("result");
-  resultDiv.innerHTML = "⏳ Тестирование...";
+const terminal = document.getElementById("terminal");
+const bar = document.getElementById("bar");
 
-  const sizeMB = 10;
-  const url = "https://speed.cloudflare.com/__down?bytes=" + sizeMB * 1024 * 1024;
+function log(t) {
+  terminal.innerHTML += "<br>> " + t;
+  terminal.scrollTop = terminal.scrollHeight;
+}
 
-  const start = performance.now();
-  const res = await fetch(url);
-  const data = await res.blob();
-  const end = performance.now();
+async function getIPInfo() {
+  const services = [
+    "https://ipapi.co/json/",
+    "https://ipwho.is/",
+    "https://api.ip.sb/geoip"
+  ];
 
-  const seconds = (end - start) / 1000;
-  const speed = (sizeMB * 8 / seconds).toFixed(2); // Mbps
+  for (const url of services) {
+    try {
+      const r = await fetch(url, { cache: "no-store" });
+      const j = await r.json();
 
-  resultDiv.innerHTML = `✅ Скорость: <b>${speed} Mbps</b>`;
+      if (j.ip || j.ip_address) {
+        return {
+          ip: j.ip || j.ip_address,
+          country: j.country_name || j.country,
+          city: j.city || "unknown",
+          isp: j.org || j.isp || "unknown",
+          asn: j.asn || j.as || "unknown"
+        };
+      }
+    } catch {}
+  }
+  return null;
+}
 
+async function safeFetch(url, timeout = 7000) {
+  const c = new AbortController();
+  const id = setTimeout(() => c.abort(), timeout);
+  try {
+    const r = await fetch(url, { signal: c.signal, cache: "no-store" });
+    await r.arrayBuffer();
+    return true;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
+async function startScan() {
+  terminal.innerHTML = "> initializing scanner";
+  bar.style.width = "5%";
+
+  log("collecting device info");
+  log("browser: " + navigator.userAgent);
+  log("language: " + navigator.language);
+  log("platform: " + navigator.platform);
+  log("screen: " + screen.width + "x" + screen.height);
+
+  log("fetching ip info");
+  const ip = await getIPInfo();
+
+  if (ip) {
+    log("ip: " + ip.ip);
+    log("country: " + ip.country);
+    log("city: " + ip.city);
+    log("isp: " + ip.isp);
+    log("asn: " + ip.asn);
+  } else {
+    log("ip info unavailable");
+  }
+
+  bar.style.width = "30%";
+  log("starting speed test");
+
+  const sizes = [1,2,3,4];
+  let bits = 0;
+  let time = 0;
+
+  for (let i of sizes) {
+    log("download " + i + "MB");
+    const s = performance.now();
+    const ok = await safeFetch("https://speed.cloudflare.com/__down?bytes=" + i * 1024 * 1024);
+    const e = performance.now();
+
+    if (ok) {
+      bits += i * 8;
+      time += (e - s) / 1000;
+    } else {
+      log("timeout");
+    }
+    bar.style.width = Math.min(90, bar.clientWidth + 20) + "%";
+  }
+
+  if (time === 0) {
+    log("network unstable");
+    bar.style.width = "100%";
+    return;
+  }
+
+  const speed = (bits / time).toFixed(2);
+  bar.style.width = "100%";
+
+  log("speed: " + speed + " Mbps");
+  log("scan complete");
+  // показать красивый результат
+document.getElementById("terminal").style.display = "none";
+document.getElementById("resultUI").style.display = "block";
+
+document.getElementById("finalSpeed").innerText = speed + " Mbps";
+
+document.getElementById("r_ip").innerText = ip.ip;
+document.getElementById("r_country").innerText = ip.country;
+document.getElementById("r_city").innerText = ip.city;
+document.getElementById("r_isp").innerText = ip.isp;
+document.getElementById("r_device").innerText = navigator.platform;
+document.getElementById("r_browser").innerText = navigator.userAgent.split(" ")[0];
   tg.sendData(JSON.stringify({
-    speed_mbps: speed,
+    speed,
+    ip,
+    device: navigator.platform,
+    browser: navigator.userAgent,
+    lang: navigator.language,
+    screen: screen.width + "x" + screen.height,
     time: new Date().toISOString()
   }));
 }
