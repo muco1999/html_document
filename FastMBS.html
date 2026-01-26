@@ -3,197 +3,128 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NET::SCANNER</title>
+<title>NET MONITOR</title>
+
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-@keyframes glitch {
-  0% { text-shadow: 2px 0 red, -2px 0 cyan; }
-  50% { text-shadow: -2px 0 red, 2px 0 cyan; }
-  100% { text-shadow: 2px 0 red, -2px 0 cyan; }
-}
-
 body {
   margin: 0;
-  font-family: "Courier New", monospace;
-  background: #000;
+  font-family: system-ui, Arial, sans-serif;
+  background: #0a0a0a;
   color: #00ffcc;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  overflow: hidden;
 }
 
-.scanline {
-  position: fixed;
-  top: 0;
-  left: 0;
+.box {
   width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.03) 1px,
-    transparent 1px
-  );
-  background-size: 100% 4px;
-}
-
-.card {
-  width: 100%;
-  max-width: 420px;
+  max-width: 380px;
   border: 1px solid #00ffcc;
-  padding: 25px;
-  border-radius: 16px;
-  background: rgba(0,0,0,0.9);
-  box-shadow: 0 0 50px rgba(0,255,204,0.3);
+  border-radius: 12px;
+  padding: 16px;
+  background: #000;
 }
 
-.title {
+h1 {
   text-align: center;
-  font-size: 22px;
-  animation: glitch 1s infinite;
+  font-size: 18px;
+  margin-bottom: 12px;
 }
 
-.terminal {
-  margin-top: 15px;
+.log {
   background: #020617;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  height: 210px;
-  overflow-y: auto;
   color: #22c55e;
+  font-size: 12px;
+  padding: 10px;
+  height: 120px;
+  overflow-y: auto;
+  border-radius: 8px;
 }
 
 .progress {
-  margin-top: 15px;
-  height: 8px;
+  margin-top: 12px;
+  height: 6px;
   background: #020617;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
-  border: 1px solid #00ffcc;
 }
 
 .bar {
   width: 0%;
   height: 100%;
-  background: linear-gradient(90deg, #00ffcc, #22c55e);
-  transition: width 0.2s;
+  background: #22c55e;
+  transition: width 0.2s linear;
 }
 
-.btn {
-  width: 100%;
-  margin-top: 20px;
-  padding: 14px;
-  font-size: 16px;
-  background: transparent;
-  border: 1px solid #00ffcc;
-  color: #00ffcc;
-  border-radius: 12px;
-  cursor: pointer;
+.result {
+  margin-top: 10px;
+  font-size: 13px;
 }
 
-.btn:hover {
-  background: rgba(0,255,204,0.15);
-}
-  .resultBox {
-  background: #020617;
-  border: 1px solid #00ffcc;
-  border-radius: 14px;
-  padding: 15px;
-  margin-top: 15px;
-}
-
-.bigSpeed {
+.big {
+  font-size: 26px;
   text-align: center;
-  font-size: 36px;
-  font-weight: bold;
+  margin-bottom: 10px;
   color: #22c55e;
-  margin-bottom: 15px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  font-size: 12px;
-}
-
-.grid div {
-  background: #000;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid rgba(0,255,204,0.3);
-}
-
-.grid span {
-  color: #22c55e;
-  word-break: break-all;
+.row {
+  margin-bottom: 6px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="scanline"></div>
+<div class="box">
+<h1>NET MONITOR</h1>
 
-<div class="card">
-  <div id="resultUI" style="display:none; margin-top:20px;">
-  <div class="resultBox">
-    <div class="bigSpeed" id="finalSpeed">0 Mbps</div>
+<div id="log" class="log">starting...</div>
 
-    <div class="grid">
-      <div><b>IP</b><br><span id="r_ip"></span></div>
-      <div><b>Country</b><br><span id="r_country"></span></div>
-      <div><b>City</b><br><span id="r_city"></span></div>
-      <div><b>ISP</b><br><span id="r_isp"></span></div>
-      <div><b>Device</b><br><span id="r_device"></span></div>
-      <div><b>Browser</b><br><span id="r_browser"></span></div>
-    </div>
-  </div>
+<div class="progress"><div id="bar" class="bar"></div></div>
+
+<div id="result" class="result">
+  <div class="big" id="speed">– Mbps</div>
+  <div class="row">IP: <span id="ip">–</span></div>
+  <div class="row">Country: <span id="country">–</span></div>
+  <div class="row">City: <span id="city">–</span></div>
+  <div class="row">ISP: <span id="isp">–</span></div>
+  <div class="row">Last update: <span id="time">–</span></div>
 </div>
-  <div class="title">NET::SCANNER</div>
-
-  <div class="terminal" id="terminal">> ready...</div>
-
-  <div class="progress"><div class="bar" id="bar"></div></div>
-
-  <button class="btn" onclick="startScan()">START SCAN</button>
 </div>
 
 <script>
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-const terminal = document.getElementById("terminal");
+const SCAN_INTERVAL = 1000; // ⏱ ИЗМЕНИ ЗДЕСЬ
+
+let running = false;
+
+const logBox = document.getElementById("log");
 const bar = document.getElementById("bar");
 
 function log(t) {
-  terminal.innerHTML += "<br>> " + t;
-  terminal.scrollTop = terminal.scrollHeight;
+  logBox.textContent += "\n> " + t;
+  logBox.scrollTop = logBox.scrollHeight;
 }
 
 async function getIPInfo() {
-  const services = [
-    "https://ipapi.co/json/",
-    "https://ipwho.is/",
-    "https://api.ip.sb/geoip"
-  ];
+  const apis = ["https://ipwho.is/", "https://ipapi.co/json/"];
 
-  for (const url of services) {
+  for (const url of apis) {
     try {
       const r = await fetch(url, { cache: "no-store" });
       const j = await r.json();
-
       if (j.ip || j.ip_address) {
         return {
           ip: j.ip || j.ip_address,
-          country: j.country_name || j.country,
+          country: j.country || j.country_name,
           city: j.city || "unknown",
-          isp: j.org || j.isp || "unknown",
-          asn: j.asn || j.as || "unknown"
+          isp: j.connection?.isp || j.org || "unknown"
         };
       }
     } catch {}
@@ -201,98 +132,63 @@ async function getIPInfo() {
   return null;
 }
 
-async function safeFetch(url, timeout = 7000) {
-  const c = new AbortController();
-  const id = setTimeout(() => c.abort(), timeout);
+async function testSpeed() {
+  const url = "https://speed.cloudflare.com/__down?bytes=256000"; // 256KB
+  const start = performance.now();
+
   try {
-    const r = await fetch(url, { signal: c.signal, cache: "no-store" });
+    const r = await fetch(url, { cache: "no-store" });
     await r.arrayBuffer();
-    return true;
+    const end = performance.now();
+    const time = (end - start) / 1000;
+    return ((0.256 * 8) / time).toFixed(2);
   } catch {
-    return false;
-  } finally {
-    clearTimeout(id);
+    return null;
   }
 }
 
-async function startScan() {
-  terminal.innerHTML = "> initializing scanner";
-  bar.style.width = "5%";
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
 
-  log("collecting device info");
-  log("browser: " + navigator.userAgent);
-  log("language: " + navigator.language);
-  log("platform: " + navigator.platform);
-  log("screen: " + screen.width + "x" + screen.height);
+async function scanLoop() {
+  if (running) return;
+  running = true;
 
-  log("fetching ip info");
-  const ip = await getIPInfo();
+  while (true) {
+    bar.style.width = "10%";
+    log("scan started");
 
-  if (ip) {
-    log("ip: " + ip.ip);
-    log("country: " + ip.country);
-    log("city: " + ip.city);
-    log("isp: " + ip.isp);
-    log("asn: " + ip.asn);
-  } else {
-    log("ip info unavailable");
-  }
+    const ip = await getIPInfo();
+    bar.style.width = "50%";
 
-  bar.style.width = "30%";
-  log("starting speed test");
-
-  const sizes = [1,2,3,4];
-  let bits = 0;
-  let time = 0;
-
-  for (let i of sizes) {
-    log("download " + i + "MB");
-    const s = performance.now();
-    const ok = await safeFetch("https://speed.cloudflare.com/__down?bytes=" + i * 1024 * 1024);
-    const e = performance.now();
-
-    if (ok) {
-      bits += i * 8;
-      time += (e - s) / 1000;
-    } else {
-      log("timeout");
-    }
-    bar.style.width = Math.min(90, bar.clientWidth + 20) + "%";
-  }
-
-  if (time === 0) {
-    log("network unstable");
+    const speed = await testSpeed();
     bar.style.width = "100%";
-    return;
+
+    if (ip && speed) {
+      document.getElementById("speed").textContent = speed + " Mbps";
+      document.getElementById("ip").textContent = ip.ip;
+      document.getElementById("country").textContent = ip.country;
+      document.getElementById("city").textContent = ip.city;
+      document.getElementById("isp").textContent = ip.isp;
+      document.getElementById("time").textContent = new Date().toLocaleTimeString();
+
+      tg.sendData(JSON.stringify({
+        speed,
+        ip,
+        time: new Date().toISOString()
+      }));
+    } else {
+      log("scan failed");
+    }
+
+    bar.style.width = "0%";
+    log("sleeping " + SCAN_INTERVAL/1000 + "s");
+    await sleep(SCAN_INTERVAL);
   }
-
-  const speed = (bits / time).toFixed(2);
-  bar.style.width = "100%";
-
-  log("speed: " + speed + " Mbps");
-  log("scan complete");
-  // показать красивый результат
-document.getElementById("terminal").style.display = "none";
-document.getElementById("resultUI").style.display = "block";
-
-document.getElementById("finalSpeed").innerText = speed + " Mbps";
-
-document.getElementById("r_ip").innerText = ip.ip;
-document.getElementById("r_country").innerText = ip.country;
-document.getElementById("r_city").innerText = ip.city;
-document.getElementById("r_isp").innerText = ip.isp;
-document.getElementById("r_device").innerText = navigator.platform;
-document.getElementById("r_browser").innerText = navigator.userAgent.split(" ")[0];
-  tg.sendData(JSON.stringify({
-    speed,
-    ip,
-    device: navigator.platform,
-    browser: navigator.userAgent,
-    lang: navigator.language,
-    screen: screen.width + "x" + screen.height,
-    time: new Date().toISOString()
-  }));
 }
+
+scanLoop();
 </script>
 
 </body>
