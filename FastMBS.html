@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NET MONITOR</title>
+<title>NET TEST</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -34,36 +34,6 @@ h1 {
   margin-bottom: 12px;
 }
 
-.log {
-  background: #020617;
-  color: #22c55e;
-  font-size: 12px;
-  padding: 10px;
-  height: 120px;
-  overflow-y: auto;
-  border-radius: 8px;
-}
-
-.progress {
-  margin-top: 12px;
-  height: 6px;
-  background: #020617;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.bar {
-  width: 0%;
-  height: 100%;
-  background: #22c55e;
-  transition: width 0.2s linear;
-}
-
-.result {
-  margin-top: 10px;
-  font-size: 13px;
-}
-
 .big {
   font-size: 26px;
   text-align: center;
@@ -72,7 +42,27 @@ h1 {
 }
 
 .row {
+  font-size: 13px;
   margin-bottom: 6px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  background: none;
+  border: 1px solid #00ffcc;
+  color: #00ffcc;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+.small {
+  font-size: 12px;
+  color: #22c55e;
 }
 </style>
 </head>
@@ -80,115 +70,109 @@ h1 {
 <body>
 
 <div class="box">
-<h1>NET MONITOR</h1>
+<h1>NET TEST</h1>
 
-<div id="log" class="log">starting...</div>
+<div class="big" id="speed">– Mbps</div>
 
-<div class="progress"><div id="bar" class="bar"></div></div>
+<div class="row">Ping: <span id="ping">– ms</span></div>
+<div class="row">IP: <span id="ip">–</span></div>
+<div class="row">Country: <span id="country">–</span></div>
+<div class="row">City: <span id="city">–</span></div>
+<div class="row">ISP: <span id="isp">–</span></div>
+<div class="row small">Time: <span id="time">–</span></div>
 
-<div id="result" class="result">
-  <div class="big" id="speed">– Mbps</div>
-  <div class="row">IP: <span id="ip">–</span></div>
-  <div class="row">Country: <span id="country">–</span></div>
-  <div class="row">City: <span id="city">–</span></div>
-  <div class="row">ISP: <span id="isp">–</span></div>
-  <div class="row">Last update: <span id="time">–</span></div>
-</div>
+<button id="btn" onclick="runTest()">TEST</button>
 </div>
 
 <script>
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-const SCAN_INTERVAL = 1000; // ⏱ ИЗМЕНИ ЗДЕСЬ
-
 let running = false;
 
-const logBox = document.getElementById("log");
-const bar = document.getElementById("bar");
-
-function log(t) {
-  logBox.textContent += "\n> " + t;
-  logBox.scrollTop = logBox.scrollHeight;
-}
-
-async function getIPInfo() {
-  const apis = ["https://ipwho.is/", "https://ipapi.co/json/"];
-
-  for (const url of apis) {
-    try {
-      const r = await fetch(url, { cache: "no-store" });
-      const j = await r.json();
-      if (j.ip || j.ip_address) {
-        return {
-          ip: j.ip || j.ip_address,
-          country: j.country || j.country_name,
-          city: j.city || "unknown",
-          isp: j.connection?.isp || j.org || "unknown"
-        };
-      }
-    } catch {}
-  }
-  return null;
-}
-
-async function testSpeed() {
-  const url = "https://speed.cloudflare.com/__down?bytes=256000"; // 256KB
-  const start = performance.now();
-
+async function getIP() {
   try {
-    const r = await fetch(url, { cache: "no-store" });
-    await r.arrayBuffer();
-    const end = performance.now();
-    const time = (end - start) / 1000;
-    return ((0.256 * 8) / time).toFixed(2);
+    const r = await fetch("https://ipwho.is/");
+    return await r.json();
   } catch {
     return null;
   }
 }
 
-function sleep(ms) {
-  return new Promise(r => setTimeout(r, ms));
-}
-
-async function scanLoop() {
-  if (running) return;
-  running = true;
-
-  while (true) {
-    bar.style.width = "10%";
-    log("scan started");
-
-    const ip = await getIPInfo();
-    bar.style.width = "50%";
-
-    const speed = await testSpeed();
-    bar.style.width = "100%";
-
-    if (ip && speed) {
-      document.getElementById("speed").textContent = speed + " Mbps";
-      document.getElementById("ip").textContent = ip.ip;
-      document.getElementById("country").textContent = ip.country;
-      document.getElementById("city").textContent = ip.city;
-      document.getElementById("isp").textContent = ip.isp;
-      document.getElementById("time").textContent = new Date().toLocaleTimeString();
-
-      tg.sendData(JSON.stringify({
-        speed,
-        ip,
-        time: new Date().toISOString()
-      }));
-    } else {
-      log("scan failed");
-    }
-
-    bar.style.width = "0%";
-    log("sleeping " + SCAN_INTERVAL/1000 + "s");
-    await sleep(SCAN_INTERVAL);
+async function pingTest() {
+  const start = performance.now();
+  try {
+    await fetch("https://1.1.1.1/cdn-cgi/trace", { cache: "no-store" });
+    return Math.round(performance.now() - start);
+  } catch {
+    return null;
   }
 }
 
-scanLoop();
+async function speedTest() {
+  const tests = [200000, 800000]; // warmup + main
+  let bits = 0;
+  let time = 0;
+
+  for (const bytes of tests) {
+    const start = performance.now();
+    try {
+      const r = await fetch(
+        "https://speed.cloudflare.com/__down?bytes=" + bytes,
+        { cache: "no-store" }
+      );
+      await r.arrayBuffer();
+      const end = performance.now();
+
+      bits += bytes * 8;
+      time += (end - start) / 1000;
+    } catch {
+      return null;
+    }
+  }
+
+  return (bits / time / 1_000_000).toFixed(2);
+}
+
+async function runTest() {
+  if (running) return;
+  running = true;
+
+  const btn = document.getElementById("btn");
+  btn.disabled = true;
+  btn.textContent = "TESTING...";
+
+  document.getElementById("speed").textContent = "– Mbps";
+  document.getElementById("time").textContent = "–";
+
+  const ping = await pingTest();
+  if (ping) document.getElementById("ping").textContent = ping + " ms";
+
+  const ip = await getIP();
+  if (ip) {
+    document.getElementById("ip").textContent = ip.ip;
+    document.getElementById("country").textContent = ip.country;
+    document.getElementById("city").textContent = ip.city;
+    document.getElementById("isp").textContent = ip.connection?.isp || "–";
+  }
+
+  const speed = await speedTest();
+  if (speed) {
+    document.getElementById("speed").textContent = speed + " Mbps";
+    document.getElementById("time").textContent = new Date().toLocaleTimeString();
+
+    tg.sendData(JSON.stringify({
+      speed,
+      ping,
+      ip,
+      time: new Date().toISOString()
+    }));
+  }
+
+  btn.disabled = false;
+  btn.textContent = "TEST";
+  running = false;
+}
 </script>
 
 </body>
