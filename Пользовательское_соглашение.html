@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Пользовательское соглашение — WebSafe VPN</title>
+  <meta name="description" content="Пользовательское соглашение WebSafe VPN (Telegram-бот @WebSafeTelbot)." />
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#0f1a2f;
+      --text:#e8eefc;
+      --muted:#a9b7d3;
+      --line:rgba(255,255,255,.10);
+      --accent:#7c5cff;
+      --accent2:#2ee59d;
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 980px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f8ff;
+        --card:#ffffff;
+        --text:#0b1220;
+        --muted:#51607a;
+        --line:rgba(11,18,32,.12);
+        --shadow: 0 10px 30px rgba(10,20,40,.10);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 10% 0%, rgba(124,92,255,.25), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(46,229,157,.18), transparent 55%),
+        radial-gradient(800px 500px at 50% 120%, rgba(124,92,255,.12), transparent 55%),
+        var(--bg);
+      line-height:1.55;
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 18px 60px}
+    header{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(0,0,0,.35), transparent);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar{
+      max-width:var(--max); margin:0 auto; padding:14px 18px;
+      display:flex; gap:14px; align-items:center; justify-content:space-between;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; min-width: 200px;
+      text-decoration:none;
+    }
+    .logo{
+      width:40px; height:40px; border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), rgba(46,229,157,.9));
+      box-shadow: 0 10px 24px rgba(124,92,255,.25);
+      position:relative;
+    }
+    .logo:after{
+      content:""; position:absolute; inset:10px 12px 12px 10px;
+      border:1.5px solid rgba(255,255,255,.65);
+      border-top-color: transparent;
+      border-left-color: transparent;
+      border-radius:10px;
+      transform: rotate(18deg);
+    }
+    .brand strong{font-size:14px; letter-spacing:.2px}
+    .brand span{display:block; font-size:12px; color:var(--muted)}
+    .actions{display:flex; gap:10px; align-items:center}
+    .btn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background: rgba(255,255,255,.04);
+      box-shadow: none;
+      color:var(--text);
+      text-decoration:none;
+      font-size:13px;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.16)}
+    .btn:active{transform: translateY(1px)}
+    .btn.primary{
+      border-color: rgba(124,92,255,.5);
+      background: linear-gradient(135deg, rgba(124,92,255,.20), rgba(46,229,157,.14));
+    }
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:4px 8px;
+      background: rgba(255,255,255,.03);
+    }
+
+    main{padding-top:22px}
+    .hero{
+      display:grid; grid-template-columns: 1.3fr .7fr; gap:18px;
+      align-items:stretch;
+      margin: 18px 0 18px;
+    }
+    @media (max-width: 860px){ .hero{grid-template-columns:1fr} .toc{order:2} }
+    .card{
+      background: color-mix(in oklab, var(--card) 88%, transparent);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero .card{padding:22px}
+    h1{
+      margin:0 0 10px;
+      font-size: 28px;
+      letter-spacing:.2px;
+      line-height:1.15;
+    }
+    .meta{
+      display:flex; flex-wrap:wrap; gap:10px;
+      margin-top:12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+    }
+    .dot{
+      width:8px; height:8px; border-radius:99px;
+      background: var(--accent2);
+      box-shadow: 0 0 0 4px rgba(46,229,157,.12);
+    }
+
+    .toc{padding:18px}
+    .toc h2{margin:0 0 10px; font-size:14px; color:var(--muted); font-weight:600}
+    .toc a{
+      display:block;
+      padding:9px 10px;
+      margin:6px 0;
+      border-radius: 12px;
+      border:1px solid transparent;
+      text-decoration:none;
+      color: var(--text);
+      font-size: 14px;
+      background: rgba(255,255,255,.02);
+    }
+    .toc a:hover{border-color: var(--line); background: rgba(255,255,255,.05)}
+    .toc small{color:var(--muted)}
+    .content{padding:22px}
+    .content h2{
+      margin: 22px 0 10px;
+      font-size: 18px;
+      letter-spacing:.2px;
+    }
+    .content h3{
+      margin: 18px 0 8px;
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    .content p{margin: 10px 0; color: color-mix(in oklab, var(--text) 92%, transparent)}
+    .content ol{margin: 10px 0 10px 20px; padding:0}
+    .content li{margin:8px 0}
+    .note{
+      margin:16px 0;
+      padding:14px 14px;
+      border-radius: 14px;
+      border: 1px dashed color-mix(in oklab, var(--accent) 55%, var(--line));
+      background: linear-gradient(135deg, rgba(124,92,255,.08), rgba(46,229,157,.06));
+      color: color-mix(in oklab, var(--text) 94%, transparent);
+      font-size: 14px;
+    }
+    .footer{
+      margin-top: 18px;
+      padding: 18px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .hr{height:1px; background: var(--line); margin: 18px 0}
+    .mono{font-family: var(--mono)}
+    .print-hint{display:none}
+    @media print{
+      header, .toc, .actions, .print-hint{display:none !important}
+      body{background:#fff; color:#000}
+      .card{box-shadow:none}
+      .wrap{padding:0}
+      a{text-decoration:none}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <a class="brand" href="#top" aria-label="WebSafe VPN">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <strong>WebSafe VPN</strong>
+        <span>Пользовательское соглашение</span>
+      </div>
+    </a>
+    <div class="actions">
+      <a class="btn primary" href="https://t.me/WebSafeTelbot" target="_blank" rel="noopener">Открыть бот</a>
+      <button class="btn" type="button" onclick="window.print()">Печать / PDF</button>
+      <span class="kbd" title="Быстрое копирование ссылки страницы">Ctrl/Cmd + L</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap" id="top">
+  <main>
+    <section class="hero">
+      <div class="card">
+        <h1>Пользовательское соглашение</h1>
+        <p style="margin:0; color: var(--muted)">
+          Настоящий документ регулирует условия использования VPN-сервиса WebSafe VPN,
+          предоставляемого через Telegram-бота <span class="mono">@WebSafeTelbot</span>.
+        </p>
+        <div class="meta">
+          <span class="pill"><span class="dot"></span><b>Актуальная версия</b></span>
+          <span class="pill">Дата публикации: <b>7 июля 2025</b></span>
+          <span class="pill">Канал доступа: <b>Telegram</b></span>
+          <span class="pill">Протокол(ы): <b>включая VLESS</b></span>
+        </div>
+        <div class="note" style="margin-top:16px">
+          Используя Сервис, вы подтверждаете, что прочитали и приняли условия Соглашения.
+          Если вы не согласны с условиями — прекратите использование Сервиса.
+        </div>
+      </div>
+
+      <aside class="card toc" aria-label="Оглавление">
+        <h2>Оглавление</h2>
+        <a href="#s1">1. Общие положения</a>
+        <a href="#s2">2. Термины и определения</a>
+        <a href="#s3">3. Предоставление услуг</a>
+        <a href="#s4">4. Пробный период</a>
+        <a href="#s5">5. Обязанности Пользователя</a>
+        <a href="#s6">6. Права Администрации</a>
+        <a href="#s7">7. Конфиденциальность и данные</a>
+        <a href="#s8">8. Платежи и возвраты</a>
+        <a href="#s9">9. Ограничение ответственности</a>
+        <a href="#s10">10. Технические неполадки</a>
+        <a href="#s11">11. Форс-мажор</a>
+        <a href="#s12">12. Юрисдикция и право</a>
+        <a href="#s13">13. Заключительные положения</a>
+        <div class="hr"></div>
+        <small>Совет: сохраните ссылку на эту страницу в избранное.</small>
+      </aside>
+    </section>
+
+    <section class="card content" aria-label="Текст соглашения">
+      <h2 id="s1">1. Общие положения</h2>
+      <ol>
+        <li>Настоящее Пользовательское соглашение (далее — «Соглашение») регулирует условия использования VPN-сервиса WebSafe VPN (далее — «Сервис»), предоставляемого через Telegram-бота <span class="mono">@WebSafeTelbot</span>.</li>
+        <li>Использование Сервиса означает полное и безоговорочное согласие Пользователя с условиями настоящего Соглашения.</li>
+        <li>Сервис предоставляет доступ к зашифрованному интернет-соединению с использованием технологий туннелирования и шифрования (включая VLESS).</li>
+        <li>Сервис не предназначен для использования в целях, запрещённых применимым законодательством страны Пользователя.</li>
+      </ol>
+
+      <h2 id="s2">2. Термины и определения</h2>
+      <ol>
+        <li><b>Пользователь</b> — физическое лицо, использующее Сервис.</li>
+        <li><b>Услуги</b> — предоставление доступа к VPN-соединению.</li>
+        <li><b>Ключ</b> — уникальные данные доступа к Сервису (конфигурация/идентификатор/ссылка подключения).</li>
+        <li><b>Подписка</b> — оплаченный период доступа к Услугам.</li>
+        <li><b>Администрация</b> — лицо(а), обеспечивающее функционирование Сервиса и поддержку Пользователей.</li>
+        <li><b>Telegram-бот</b> — программный интерфейс в мессенджере Telegram для управления доступом, оплатой и поддержкой.</li>
+      </ol>
+
+      <h2 id="s3">3. Предоставление услуг</h2>
+      <ol>
+        <li>Доступ к Сервису предоставляется после выдачи Пользователю Ключа через Telegram-бота.</li>
+        <li>Сервис работает по модели подписки. Тарифы, сроки и состав услуг отображаются в Telegram-боте.</li>
+        <li>Администрация вправе изменять тарифы и условия предоставления услуг. Изменения применяются к новым покупкам/продлениям и не ухудшают уже оплаченную активную подписку.</li>
+      </ol>
+
+      <h2 id="s4">4. Пробный период</h2>
+      <ol>
+        <li>Сервис может предоставлять пробный период (trial) на ограниченное время и/или с ограничениями по функционалу.</li>
+        <li>Администрация вправе отказать в предоставлении пробного периода, ограничить его условия или завершить досрочно при подозрении на злоупотребления.</li>
+        <li>Пробный период предоставляется для ознакомления и не является гарантией постоянной доступности или скорости соединения.</li>
+      </ol>
+
+      <h2 id="s5">5. Права и обязанности Пользователя</h2>
+      <h3>Пользователь обязуется:</h3>
+      <ol>
+        <li>Использовать Сервис исключительно в законных целях и не нарушать права третьих лиц.</li>
+        <li>Не использовать Сервис для: атак на сети и системы, распространения вредоносного ПО, мошенничества, спама, несанкционированного доступа к данным, а также иных противоправных действий.</li>
+        <li>Не передавать Ключ третьим лицам и обеспечивать конфиденциальность данных доступа.</li>
+        <li>Самостоятельно обеспечивать безопасность своих устройств, учётных записей и приложений.</li>
+      </ol>
+
+      <h2 id="s6">6. Права Администрации</h2>
+      <ol>
+        <li>Администрация вправе приостановить или прекратить доступ к Сервису при нарушении условий Соглашения, злоупотреблениях, подозрении на мошенничество или угрозах безопасности.</li>
+        <li>Администрация вправе вводить технические ограничения (скорость, трафик, количество одновременных подключений) для защиты инфраструктуры и качества обслуживания.</li>
+        <li>Администрация вправе изменять и/или прекращать функционал Сервиса при необходимости обеспечения безопасности, стабильности или модернизации.</li>
+      </ol>
+
+      <h2 id="s7">7. Конфиденциальность и данные</h2>
+      <ol>
+        <li>Сервис не предназначен для хранения пользовательских данных и не является средством анонимизации личности. Пользователь самостоятельно оценивает риски и применимость Сервиса в своей юрисдикции.</li>
+        <li><b>Сервис не ведёт логирование содержимого интернет-трафика</b> (данных, которые Пользователь передаёт через VPN), при этом могут обрабатываться минимальные технические данные, необходимые для работы Сервиса: Telegram ID, статус подписки, даты активации/окончания доступа, технические события выдачи/обновления Ключа.</li>
+        <li>Технические данные используются исключительно для предоставления услуг, поддержки и предотвращения злоупотреблений.</li>
+        <li>Передача данных третьим лицам возможна только в случаях, когда это требуется применимым правом и в пределах законных запросов.</li>
+      </ol>
+
+      <h2 id="s8">8. Платежи и возвраты</h2>
+      <ol>
+        <li>Оплата Подписки означает предоставление доступа к инфраструктуре Сервиса на выбранный срок.</li>
+        <li>Возврат возможен, если оплаченный доступ не был предоставлен по вине Сервиса более 48 часов подряд, и Пользователь обратился в поддержку через Telegram-бота <span class="mono">@WebSafeTelbot</span>, указав дату, способ оплаты и детали проблемы.</li>
+        <li>Возврат не производится в случаях: нарушения Соглашения, истечения подписки, невозможности использования из-за ограничений на стороне Пользователя/провайдера/устройства/платформы, а также при фактическом использовании Сервиса в период подписки (за исключением длительной недоступности по вине Сервиса).</li>
+        <li>Срок рассмотрения обращения — до 10 рабочих дней.</li>
+      </ol>
+
+      <h2 id="s9">9. Ограничение ответственности</h2>
+      <ol>
+        <li>Сервис предоставляется по принципу «как есть» (as is), без гарантий бесперебойности, конкретной скорости или совместимости с любыми сайтами/приложениями.</li>
+        <li>Администрация не несёт ответственности за блокировки ресурсов, снижение скорости, потери данных, упущенную выгоду, косвенные убытки, а также последствия использования Сервиса Пользователем.</li>
+      </ol>
+
+      <h2 id="s10">10. Технические неполадки</h2>
+      <ol>
+        <li>Сервис может быть временно недоступен по техническим причинам, включая профилактические работы, обновления или сбои внешней инфраструктуры.</li>
+        <li>Перерывы в работе не являются основанием для компенсации, кроме случаев, прямо указанных в разделе 8.</li>
+      </ol>
+
+      <h2 id="s11">11. Форс-мажор</h2>
+      <ol>
+        <li>Стороны освобождаются от ответственности за невыполнение обязательств при наступлении обстоятельств непреодолимой силы, включая стихийные бедствия, военные действия, кибератаки, решения государственных органов, блокировки, санкции и сбои внешней инфраструктуры.</li>
+      </ol>
+
+      <h2 id="s12">12. Применимое право и юрисдикция</h2>
+      <ol>
+        <li>Соглашение регулируется общепризнанными принципами международного коммерческого оборота и электронных услуг, применимыми к трансграничным цифровым сервисам.</li>
+        <li>Стороны стремятся урегулировать споры путём переговоров. Если урегулирование невозможно, спор подлежит рассмотрению по месту нахождения Администрации (как места оказания услуг).</li>
+      </ol>
+
+      <h2 id="s13">13. Заключительные положения</h2>
+      <ol>
+        <li>Соглашение вступает в силу с момента начала использования Сервиса.</li>
+        <li>Администрация вправе обновлять условия Соглашения. Актуальная версия публикуется на этой странице и/или по ссылке в Telegram-боте.</li>
+        <li>Если какое-либо положение Соглашения признано недействительным, остальные положения сохраняют силу.</li>
+      </ol>
+
+      <div class="note">
+        <b>Контакты поддержки:</b> через Telegram-бот <span class="mono">@WebSafeTelbot</span>.
+      </div>
+    </section>
+
+    <section class="card footer" aria-label="Подвал">
+      <div>
+        <b>WebSafe VPN</b><br />
+        <span>Документ: Пользовательское соглашение</span>
+      </div>
+      <div>
+        <span class="mono">©</span> <span id="y"></span> •
+        <a href="#top" style="text-decoration:none; border-bottom:1px dashed var(--line)">Наверх</a>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  // Автогод в подвале
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // Плавный скролл по якорям (без библиотек)
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      const el = document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.pushState(null, '', id);
+    });
+  });
+</script>
+</body>
+</html>
