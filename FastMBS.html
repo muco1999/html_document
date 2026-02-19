@@ -1,179 +1,481 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NET TEST</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <title>NET TEST</title>
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-<style>
-body {
-  margin: 0;
-  font-family: system-ui, Arial, sans-serif;
-  background: #0a0a0a;
-  color: #00ffcc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-.box {
-  width: 100%;
-  max-width: 380px;
-  border: 1px solid #00ffcc;
-  border-radius: 12px;
-  padding: 16px;
-  background: #000;
-}
-
-h1 {
-  text-align: center;
-  font-size: 18px;
-  margin-bottom: 12px;
-}
-
-.big {
-  font-size: 26px;
-  text-align: center;
-  margin-bottom: 10px;
-  color: #22c55e;
-}
-
-.row {
-  font-size: 13px;
-  margin-bottom: 6px;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 12px;
-  background: none;
-  border: 1px solid #00ffcc;
-  color: #00ffcc;
-  border-radius: 8px;
-  font-size: 15px;
-}
-
-button:disabled {
-  opacity: 0.6;
-}
-.small {
-  font-size: 12px;
-  color: #22c55e;
-}
-</style>
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --card:#0f1318;
+      --border:#1c2733;
+      --text:#e7f6ff;
+      --muted:#88a6b8;
+      --accent:#00ffd0;
+      --good:#22c55e;
+      --bad:#ef4444;
+      --warn:#f59e0b;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --r:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(800px 500px at 50% 0%, rgba(0,255,208,.08), transparent 60%), var(--bg);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .card{
+      width:100%;
+      max-width:420px;
+      background: linear-gradient(180deg, rgba(255,255,255,.02), transparent 40%), var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .title{display:flex;flex-direction:column;gap:2px}
+    h1{
+      font-size:15px;
+      margin:0;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      color:rgba(231,246,255,.92);
+    }
+    .sub{font-size:12px;color:var(--muted)}
+    .pill{
+      font-size:12px;
+      padding:6px 10px;
+      border:1px solid rgba(0,255,208,.25);
+      border-radius:999px;
+      color:var(--accent);
+      background:rgba(0,255,208,.06);
+      white-space:nowrap;
+    }
+    .big{
+      font-size:30px;
+      font-weight:800;
+      letter-spacing:.2px;
+      text-align:center;
+      margin:10px 0 12px;
+      color:var(--good);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:8px;
+      margin-top:6px;
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:12px;
+      background:rgba(0,0,0,.18);
+      min-width:0;
+    }
+    .k{font-size:12px;color:var(--muted)}
+    .v{
+      font-size:12px;color:var(--text);text-align:right;
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+      max-width:70%;
+    }
+    .actions{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+    }
+    button{
+      appearance:none;
+      border:1px solid rgba(0,255,208,.35);
+      background:rgba(0,255,208,.08);
+      color:var(--accent);
+      border-radius:12px;
+      padding:12px 14px;
+      width:100%;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .06s ease, opacity .15s ease;
+    }
+    button:active{transform:translateY(1px)}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .ghost{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:rgba(231,246,255,.85);
+    }
+    .status{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background:rgba(255,255,255,.22);
+      display:inline-block;
+      margin-right:8px;
+      transform:translateY(1px);
+      flex:0 0 auto;
+    }
+    .ok{background:var(--good)}
+    .bad{background:var(--bad)}
+    .warn{background:var(--warn)}
+    .hint{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:55%}
+    .note{
+      margin-top:10px;
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.35;
+    }
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+  </style>
 </head>
 
 <body>
+  <main class="card" role="main" aria-label="NET TEST">
+    <header>
+      <div class="title">
+        <h1>NET TEST</h1>
+        <div class="sub">Быстрая проверка сети (Telegram WebApp / Browser)</div>
+      </div>
+      <div class="pill" id="env">Browser</div>
+    </header>
 
-<div class="box">
-<h1>NET TEST</h1>
+    <div class="big" id="speed">— Mbps</div>
 
-<div class="big" id="speed">– Mbps</div>
+    <section class="grid" aria-live="polite">
+      <div class="row"><div class="k">Ping</div><div class="v" id="ping">— ms</div></div>
+      <div class="row"><div class="k">IP</div><div class="v" id="ip">—</div></div>
+      <div class="row"><div class="k">Country</div><div class="v" id="country">—</div></div>
+      <div class="row"><div class="k">City</div><div class="v" id="city">—</div></div>
+      <div class="row"><div class="k">ISP</div><div class="v" id="isp">—</div></div>
+      <div class="row"><div class="k">Time</div><div class="v" id="time">—</div></div>
+    </section>
 
-<div class="row">Ping: <span id="ping">– ms</span></div>
-<div class="row">IP: <span id="ip">–</span></div>
-<div class="row">Country: <span id="country">–</span></div>
-<div class="row">City: <span id="city">–</span></div>
-<div class="row">ISP: <span id="isp">–</span></div>
-<div class="row small">Time: <span id="time">–</span></div>
+    <div class="actions">
+      <button id="btn" type="button">▶ TEST</button>
+      <button id="send" type="button" class="ghost">⤴ SEND</button>
+    </div>
 
-<button id="btn" onclick="runTest()">TEST</button>
-</div>
+    <div class="status">
+      <div style="min-width:0">
+        <span class="dot" id="dot"></span><span id="st">Готово</span>
+      </div>
+      <div class="hint" id="hint"></div>
+    </div>
+
+    <p class="note">
+      ✅ Если страницу открыли <b>из твоего бота</b> (есть параметр <code>?k=...</code>) — результат отправится автоматически. <br>
+      ℹ️ Если открыть как обычный сайт — тест работает, но ничего не отправляет.
+    </p>
+  </main>
 
 <script>
-const tg = window.Telegram.WebApp;
-tg.expand();
+(() => {
+  const tg = window.Telegram?.WebApp;
+  try { tg?.expand(); } catch {}
 
-let running = false;
+  const $ = (id) => document.getElementById(id);
 
-async function getIP() {
-  try {
-    const r = await fetch("https://ipwho.is/");
-    return await r.json();
-  } catch {
+  const ui = {
+    env: $("env"),
+    speed: $("speed"),
+    ping: $("ping"),
+    ip: $("ip"),
+    country: $("country"),
+    city: $("city"),
+    isp: $("isp"),
+    time: $("time"),
+    btn: $("btn"),
+    send: $("send"),
+    st: $("st"),
+    dot: $("dot"),
+    hint: $("hint"),
+  };
+
+  // ===== URL param: signed key from bot =====
+  const qs = new URLSearchParams(location.search);
+  const k = (qs.get("k") || "").trim();
+
+  // environment label
+  ui.env.textContent = tg ? "Telegram WebApp" : "Browser";
+
+  const state = {
+    running: false,
+    last: null,
+  };
+
+  function setStatus(text, level = "idle") {
+    ui.st.textContent = text;
+    ui.dot.className = "dot";
+    if (level === "ok") ui.dot.classList.add("ok");
+    else if (level === "bad") ui.dot.classList.add("bad");
+    else if (level === "warn") ui.dot.classList.add("warn");
+  }
+  function setHint(text = "") {
+    ui.hint.textContent = text;
+  }
+
+  function nowLocal() {
+    try { return new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"}); }
+    catch { return new Date().toLocaleTimeString(); }
+  }
+
+  // Abortable fetch with timeout
+  async function fetchJSON(url, { timeoutMs = 3500 } = {}) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const r = await fetch(url, { cache:"no-store", signal: ctrl.signal });
+      if (!r.ok) return null;
+      return await r.json();
+    } catch { return null; }
+    finally { clearTimeout(t); }
+  }
+
+  async function fetchNoBody(url, { timeoutMs = 2500 } = {}) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const r = await fetch(url, { cache:"no-store", signal: ctrl.signal, mode:"cors" });
+      if (!r.ok) return null;
+      return true;
+    } catch { return null; }
+    finally { clearTimeout(t); }
+  }
+
+  function normIpInfo(x) {
+    if (!x || typeof x !== "object") return null;
+
+    // ipwho.is
+    if ("ip" in x && ("country" in x || "city" in x || "connection" in x)) {
+      if (x.success === false) return null;
+      return {
+        ip: x.ip || null,
+        country: x.country || null,
+        city: x.city || null,
+        isp: x.connection?.isp || x.isp || null,
+        source: "ipwho.is",
+      };
+    }
+
+    // ipapi.co
+    if ("ip" in x && ("country_name" in x || "city" in x || "org" in x)) {
+      return {
+        ip: x.ip || null,
+        country: x.country_name || x.country || null,
+        city: x.city || null,
+        isp: x.org || x.asn || null,
+        source: "ipapi.co",
+      };
+    }
+
+    // ipinfo.io
+    if ("ip" in x && ("country" in x || "city" in x || "org" in x)) {
+      return {
+        ip: x.ip || null,
+        country: x.country || null,
+        city: x.city || null,
+        isp: x.org || null,
+        source: "ipinfo.io",
+      };
+    }
     return null;
   }
-}
 
-async function pingTest() {
-  const start = performance.now();
-  try {
-    await fetch("https://1.1.1.1/cdn-cgi/trace", { cache: "no-store" });
-    return Math.round(performance.now() - start);
-  } catch {
+  async function ipInfoMulti() {
+    const a = normIpInfo(await fetchJSON("https://ipwho.is/?fields=success,ip,country,city,connection", { timeoutMs: 3800 }));
+    if (a) return a;
+
+    const b = normIpInfo(await fetchJSON("https://ipapi.co/json/", { timeoutMs: 3800 }));
+    if (b) return b;
+
+    const c = normIpInfo(await fetchJSON("https://ipinfo.io/json", { timeoutMs: 3800 }));
+    if (c) return c;
+
     return null;
   }
-}
 
-async function speedTest() {
-  const tests = [200000, 800000]; // warmup + main
-  let bits = 0;
-  let time = 0;
+  async function pingTest() {
+    const start = performance.now();
+    const ok =
+      await fetchNoBody("https://www.cloudflare.com/cdn-cgi/trace", { timeoutMs: 2500 }) ||
+      await fetchNoBody("https://1.1.1.1/cdn-cgi/trace", { timeoutMs: 2300 });
+    if (!ok) return null;
+    return Math.max(0, Math.round(performance.now() - start));
+  }
 
-  for (const bytes of tests) {
+  async function speedTest() {
+    // ultra-light: one request only (saving traffic)
+    const bytes = 600000; // ~0.6MB
+    const url = "https://speed.cloudflare.com/__down?bytes=" + bytes;
+
+    const ctrl = new AbortController();
+    const timeoutMs = 6500;
+    const t = setTimeout(() => ctrl.abort(), timeoutMs);
+
     const start = performance.now();
     try {
-      const r = await fetch(
-        "https://speed.cloudflare.com/__down?bytes=" + bytes,
-        { cache: "no-store" }
-      );
+      const r = await fetch(url, { cache:"no-store", signal: ctrl.signal });
+      if (!r.ok) return null;
       await r.arrayBuffer();
-      const end = performance.now();
+      const sec = (performance.now() - start) / 1000;
+      if (!sec || sec <= 0) return null;
+      return (bytes * 8) / sec / 1_000_000; // Mbps
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(t);
+    }
+  }
 
-      bits += bytes * 8;
-      time += (end - start) / 1000;
+  function getTelegramUser() {
+    try {
+      const u = tg?.initDataUnsafe?.user;
+      if (!u) return null;
+      return {
+        id: u.id ?? null,
+        username: u.username ?? null,
+        first_name: u.first_name ?? null,
+        last_name: u.last_name ?? null,
+        language_code: u.language_code ?? null,
+      };
     } catch {
       return null;
     }
   }
 
-  return (bits / time / 1_000_000).toFixed(2);
-}
+  function render(r) {
+    ui.ping.textContent = r.ping_ms != null ? `${r.ping_ms} ms` : "— ms";
+    ui.ip.textContent = r.ip ?? "—";
+    ui.country.textContent = r.country ?? "—";
+    ui.city.textContent = r.city ?? "—";
+    ui.isp.textContent = r.isp ?? "—";
+    ui.time.textContent = r.time_local ?? "—";
 
-async function runTest() {
-  if (running) return;
-  running = true;
-
-  const btn = document.getElementById("btn");
-  btn.disabled = true;
-  btn.textContent = "TESTING...";
-
-  document.getElementById("speed").textContent = "– Mbps";
-  document.getElementById("time").textContent = "–";
-
-  const ping = await pingTest();
-  if (ping) document.getElementById("ping").textContent = ping + " ms";
-
-  const ip = await getIP();
-  if (ip) {
-    document.getElementById("ip").textContent = ip.ip;
-    document.getElementById("country").textContent = ip.country;
-    document.getElementById("city").textContent = ip.city;
-    document.getElementById("isp").textContent = ip.connection?.isp || "–";
+    if (r.speed_mbps != null) {
+      ui.speed.textContent = `${r.speed_mbps.toFixed(2)} Mbps`;
+      ui.speed.style.color = "var(--good)";
+    } else {
+      ui.speed.textContent = "— Mbps";
+      ui.speed.style.color = "var(--muted)";
+    }
   }
 
-  const speed = await speedTest();
-  if (speed) {
-    document.getElementById("speed").textContent = speed + " Mbps";
-    document.getElementById("time").textContent = new Date().toLocaleTimeString();
-
-    tg.sendData(JSON.stringify({
-      speed,
-      ping,
-      ip,
-      time: new Date().toISOString()
-    }));
+  function canSend() {
+    // ✅ only if opened inside Telegram and has signed key in URL
+    return !!tg?.sendData && !!k;
   }
 
-  btn.disabled = false;
-  btn.textContent = "TEST";
-  running = false;
-}
+  function sendToBot(payload) {
+    if (!canSend()) return false;
+    try {
+      tg.sendData(JSON.stringify(payload));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async function runTest() {
+    if (state.running) return;
+    state.running = true;
+
+    ui.btn.disabled = true;
+    ui.send.disabled = true;
+    ui.btn.textContent = "⏳ TESTING...";
+    setStatus("Тестирую…", "warn");
+
+    setHint(
+      canSend()
+        ? "Auto-send: ON"
+        : (tg ? "Auto-send: OFF (нет ?k=...)" : "Auto-send: OFF (не Telegram)")
+    );
+
+    render({ speed_mbps:null, ping_ms:null, ip:null, country:null, city:null, isp:null, time_local:"—" });
+
+    const time_local = nowLocal();
+    const time_iso = new Date().toISOString();
+
+    // sequential => stable on weak devices
+    const ping_ms = await pingTest();
+    const ipInfo = await ipInfoMulti();
+    const speed = await speedTest();
+
+    const speed_mbps = speed != null ? Number(speed.toFixed(2)) : null;
+    const tgUser = getTelegramUser();
+
+    const result = {
+      type: "net_test",
+      k, // signed token from URL (only present when opened from bot)
+      telegram_user: tgUser, // id/username etc (only present in Telegram)
+      speed_mbps,
+      ping_ms: ping_ms ?? null,
+      ip: ipInfo?.ip ?? null,
+      country: ipInfo?.country ?? null,
+      city: ipInfo?.city ?? null,
+      isp: ipInfo?.isp ?? null,
+      ip_source: ipInfo?.source ?? null,
+      time_local,
+      time_iso,
+      in_telegram: !!tg,
+      ua: navigator.userAgent,
+    };
+
+    state.last = result;
+    render(result);
+
+    // ✅ Auto-send after test ONLY if canSend()
+    const sent = sendToBot(result);
+
+    if (sent) setStatus("Готово ✅ Отправлено", "ok");
+    else setStatus("Готово ✅ (без отправки)", canSend() ? "warn" : "idle");
+
+    ui.btn.disabled = false;
+    ui.send.disabled = false;
+    ui.btn.textContent = "▶ TEST";
+    state.running = false;
+  }
+
+  ui.btn.addEventListener("click", runTest);
+
+  ui.send.addEventListener("click", () => {
+    if (!state.last) {
+      setStatus("Сначала сделай TEST", "warn");
+      return;
+    }
+    const sent = sendToBot({ ...state.last, resend: true, time_iso: new Date().toISOString() });
+    if (sent) setStatus("Отправлено ✅", "ok");
+    else setStatus("Не отправлено ❌", "bad");
+  });
+
+  // initial UI
+  render({ speed_mbps:null, ping_ms:null, ip:null, country:null, city:null, isp:null, time_local:"—" });
+  setHint(canSend() ? "Auto-send: ON" : "");
+})();
 </script>
-
 </body>
 </html>
